@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.4 2005-10-12 12:11:41 steve Exp $
+# $Id: yp,v 1.5 2005-10-12 12:21:23 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -73,7 +73,7 @@ sub getWeblogs
     #
     #
 
-    my $sql = $dbh->prepare( "SELECT id, username, title, bodytext, ondate,comments FROM weblogs ORDER BY ondate DESC LIMIT 0,$count" );
+    my $sql = $dbh->prepare( "SELECT id, username, title, bodytext, DATE(ondate), TIME( ondate ),comments FROM weblogs ORDER BY ondate DESC LIMIT 0,$count" );
 
     #
     # get required data
@@ -84,22 +84,61 @@ sub getWeblogs
     my $dataref = $sql->fetchall_arrayref;
     my $len = @$dataref;
 
-    my $weblogs = [];
-    
+    my $weblogs  = [];
+    my $prevDate = '';
+
     for ( my $l = 0; $l < $len; $l++ ) 
     {
 	my $entry = @$dataref[$l];
 	my @entry = @$entry;
 
 
+	#
+	# 0 comments
+	# 1 comment
+	# 2 comments 
+	# ..
+	my $comments = $entry[6];
+	my $plural = 1;
+	if ( $comments eq 1 )
+	{
+	   $plural = 0;
+	}
+	
+	#
+	# Check for new date
+	#
+	my $new_date = 0;
+	my $date     = $entry[4];
+	my $time     = $entry[5];
+	if ( $date ne $prevDate )
+	{
+	    $new_date = 1;
+	}
+	$prevDate = $date;
+
+
+	#
+	# Check for comments being disabled
+	#
+	my $comments_disabled = 0;
+	if ( $comments <  0 )
+	{
+	    $comments_disabled = 1;
+	}
+	
 	push ( @$weblogs,
 	       {
 		   id       => $entry[0],
 		   user     => $entry[1],
 		   title    => $entry[2],
 		   body     => $entry[3],
-		   date     => $entry[4],
-		   comments => $entry[5],
+		   date     => $date,
+		   time     => $time,
+		   comments => $comments,
+		   disabled => $comments_disabled,
+		   plural   => $plural,
+		   new_date => $new_date,
 	       } );
     }
 

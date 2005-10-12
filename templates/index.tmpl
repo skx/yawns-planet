@@ -20,12 +20,21 @@
 
 <!-- tmpl_loop name='blogs' -->
 
+<!-- tmpl_if name="new_date" -->
+<h2><!-- tmpl_var name="date" --></h2>
+<!-- /tmpl_if -->
+
 <h3><a href="/users/<!-- tmpl_var name="user" -->" title="Weblogs for <!-- tmpl_var name="user">"><!-- tmpl_var name="user" --></a>: <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"> <!-- tmpl_var name="title" --></a></h3>
 <div class="entry">
 <!-- tmpl_var name="body" -->
 </div>
 <p class="date">
-<!-- tmpl_var name="date" --> : <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"><!-- tmpl_var name="comments" --> comments</a>
+<!-- tmpl_var name="date" --> <!-- tmpl_var name="time" --> :  : 
+<!-- tmpl_if name="disabled" -->
+ Comments disabled
+<!-- tmpl_else -->
+ <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"><!-- tmpl_var name="comments" --> comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>
+<!-- /tmpl_if -->
 </p>
 
 <!-- /tmpl_loop -->
