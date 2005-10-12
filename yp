@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.1 2005-10-12 11:17:33 steve Exp $
+# $Id: yp,v 1.2 2005-10-12 11:29:23 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -36,3 +36,29 @@ use HTML::Template
 #
 
 
+
+
+#
+#  Return the relevent weblog entries from the database
+#
+sub getWeblogs()
+{
+    my ( $dbh, $count ) = ( @_ );
+
+    #
+    # Execute Query:
+    #
+    # SELECT a.gid,a.id, a.username, a.title, a.bodytext, a.ondate, count(b.id)
+    #  FROM weblogs AS a
+    #    INNER JOIN comments AS b
+    #      ON a.gid=b.root AND b.type='w' 
+    #      GROUP by a.ondate DESC LIMIT 0,$count;
+    #
+    #  Hmmm comments are counted in the weblogs table too:
+    #
+    # SELECT gid, id, username, title, bodytext, ondate,comments
+    #  FROM weblogs 
+    #   ORDER BY ondate DESC LIMIT 0, $count
+    #
+    #
+}
