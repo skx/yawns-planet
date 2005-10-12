@@ -19,6 +19,26 @@ Rationale
           is permitted upon a PlanetPlanet installation.
 
 
+Requirements
+------------
+
+  Using this software makes no sense if you're not running an
+ installation of Yawns.
+
+  If you have Yawns installed then the only additional requirements
+ are the following Perl modules:
+
+	Date::Manip
+	DBI
+	HTML::Entities
+	HTML::Template
+  
+  The latter two you will have installed to run Yawns.  The first
+ can be installed upon a Debian host with:
+
+	apt-get install libdate-manip-perl
+
+
 Installation
 ------------
 
@@ -33,10 +53,10 @@ Installation
  files to the directory ./html/
 
   If you wish you may customize the template files before updating
- them.  They are standard HTML::Template files.
+ them.  (They are standard HTML::Template files.)
 
 
 
 Steve
 --
-$Id: README,v 1.2 2005-10-12 12:46:52 steve Exp $
+$Id: README,v 1.3 2005-10-12 18:11:04 steve Exp $
