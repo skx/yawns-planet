@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.18 2005-10-12 15:59:51 steve Exp $
+# $Id: yp,v 1.19 2005-10-12 18:17:10 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -33,7 +33,7 @@ use Singleton::DBI;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: yp,v 1.18 2005-10-12 15:59:51 steve Exp $';
+my $REVISION  = '$Id: yp,v 1.19 2005-10-12 18:17:10 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -207,6 +207,7 @@ sub getSubscriptions
 	    $real_name = $user_name ;
 	}
 
+	$real_name = encode_entities( $real_name );
 	push ( @$subscriptions,
 	       {
 		   account => $user_name,
