@@ -13,14 +13,14 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.9 2005-10-12 12:54:49 steve Exp $
+# $Id: yp,v 1.10 2005-10-12 13:05:17 steve Exp $
 
 # Enforce good programming practices
 use strict;
 
 # Modules we use.
 use HTML::Template;
-use POSIX qw/ strftime /;	# time/date string handling functions
+use POSIX qw/ strftime /;
 
 
 # Custom modules
@@ -239,8 +239,13 @@ sub writeHTMLIndex
     $template->param( 'title_link', get_conf( 'title_link' ) );
     $template->param( 'updated' ,   $time );
 
-    open( OUTPUT, ">html/index.html" );
+
+    #
+    # Open the output file, and write the data.
+    #
+    my $output = "html/index.html";
+    open( OUTPUT, ">", $output ) 
+	or die "Cannot open output file '$output' - $!@";
     print OUTPUT $template->output();
     close( OUTPUT );
-
 }
