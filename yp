@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.3 2005-10-12 11:57:25 steve Exp $
+# $Id: yp,v 1.4 2005-10-12 12:11:41 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -107,6 +107,62 @@ sub getWeblogs
 }
 
 
+#
+#  Return the list of subscribed users.
+#
+sub getSubscriptions
+{
+    my ($dbh ) = Singleton::DBI->instance();
+
+    #
+    # Find the posters.
+    #
+    my $query = "SELECT DISTINCT a.realname,a.username FROM users AS a INNER JOIN weblogs AS b ON a.username = b.username";
+
+    my $sql = $dbh->prepare( $query );
+    $sql->execute();
+
+    #
+    # Get all the results.
+    #
+    my $dataref  = $sql->fetchall_arrayref();
+    my @datalist = @$dataref;
+    $sql->finish();
+
+    # Data from the query
+    my $user = ();
+    my $subscriptions = [];
+
+    foreach my $data ( @datalist )
+    {
+	my @user = @$data;
+
+	#
+	#  Find the data.
+	#
+	my $real_name = $user[0];
+	my $user_name = $user[1];
+
+	if (! $real_name )
+	{
+	    $real_name = $user_name ;
+	}
+
+	push ( @$subscriptions,
+	       {
+		   account => $user_name,
+		   fullname => $real_name
+		   });
+
+    }
+
+    return( $subscriptions );
+}
+
+
+#
+#
+#
 sub writeHTML 
 {
     my ( @entries ) = ( @_ );
@@ -114,7 +170,7 @@ sub writeHTML
     my $template = HTML::Template->new( filename => "templates/index.tmpl" );
 
     $template->param( 'blogs', @entries );
-
+    $template->param( 'subscriptions', getSubscriptions( ) );
     open( OUTPUT, ">html/index.html" );
     print OUTPUT $template->output();
     close( OUTPUT );
