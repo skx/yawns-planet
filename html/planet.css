@@ -23,7 +23,7 @@ h2 {
 	font-family: "Bitstream Vera Sans", sans-serif;
 	font-weight: normal;
 	color: #200080;
-
+        border-bottom: 1px black dotted; 
 	margin-left: -20px;
 }
 
