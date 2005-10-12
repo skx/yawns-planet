@@ -4,5 +4,19 @@
  </head>
  <body>
   <h1>Title</h1>
+
+<!-- tmpl_loop name='blogs' -->
+
+<h3><a href="/users/<!-- tmpl_var name="user" -->" title="Weblogs for <!-- tmpl_var name="user">"><!-- tmpl_var name="user" --></a>: <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"> <!-- tmpl_var name="title" --></a></h3>
+<div class="entry">
+<!-- tmpl_var name="body" -->
+</div>
+<p class="date">
+<!-- tmpl_var name="date" --> : <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"><!-- tmpl_var name="comments" --> comments</a>
+</p>
+
+<!-- /tmpl_loop -->
+
+
  </body>
 </html>
