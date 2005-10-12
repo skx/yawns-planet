@@ -1,0 +1,20 @@
+Yawns-Planet
+------------
+
+  This software is designed to output a "PlanetPlanet" like collection
+ of webpages, by directly querying a Yawns database.
+
+  This has several attractions:
+
+	* It allows the display to contain more information than
+          is permitted upon a PlanetPlanet installation.
+        * It doesn't require hitting your webserver to fetch
+          a list of feeds.
+
+  The software will directly query the weblog, users, and 
+ comments table to detect the recent weblogs.
+
+
+Steve
+--
+$Id: README,v 1.1 2005-10-12 11:14:04 steve Exp $
