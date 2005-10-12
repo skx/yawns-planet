@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.15 2005-10-12 15:31:32 steve Exp $
+# $Id: yp,v 1.16 2005-10-12 15:49:43 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -28,6 +28,18 @@ use POSIX qw/ strftime /;
 # Custom modules
 use conf::SiteConfig;
 use Singleton::DBI;
+
+
+#
+# Read-only variables: version number from CVS.
+#
+my $REVISION      = '$Id: yp,v 1.16 2005-10-12 15:49:43 steve Exp $';
+our $VERSION      = "";
+$VERSION = join (' ', (split (' ', $REVISION))[1..2]);
+$VERSION =~ s/,v\b//;
+$VERSION =~ s/(\S+)$/($1)/;
+
+
 
 
 #
@@ -242,6 +254,7 @@ sub writeHTMLIndex
     $template->param( 'title',      get_conf( 'title' ) );
     $template->param( 'title_link', get_conf( 'title_link' ) );
     $template->param( 'updated' ,   $time );
+    $template->param( 'version' ,   $VERSION );
 
 
     #
