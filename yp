@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -w -I.
 
 # ===========================================================================
 # File:		yp
@@ -13,27 +13,38 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.2 2005-10-12 11:29:23 steve Exp $
+# $Id: yp,v 1.3 2005-10-12 11:57:25 steve Exp $
 
 # Enforce good programming practices
 use strict;
 
-
 # Modules we use.
-use DBI;
-use HTML::Template
+use HTML::Template;
+
+# Custom modules
+use conf::SiteConfig;
+use Singleton::DBI;
+
 
 #
 #  1. Connect to the database
 #
-#  2. Get weblog posters.
+my $dbh = Singleton::DBI->instance();
+
+
+#  2. Get weblog entries.
+#
+my @entries = getWeblogs( $dbh, get_conf( "count" ) );
+
 #
 #  3. Create output HTML
-#
+writeHTML(@entries);
+
 #  4. Create output XML feeds.
 # 
 #  5. Disconnect from database.
 #
+$dbh->disconnect();
 
 
 
@@ -41,7 +52,7 @@ use HTML::Template
 #
 #  Return the relevent weblog entries from the database
 #
-sub getWeblogs()
+sub getWeblogs
 {
     my ( $dbh, $count ) = ( @_ );
 
@@ -61,4 +72,51 @@ sub getWeblogs()
     #   ORDER BY ondate DESC LIMIT 0, $count
     #
     #
+
+    my $sql = $dbh->prepare( "SELECT id, username, title, bodytext, ondate,comments FROM weblogs ORDER BY ondate DESC LIMIT 0,$count" );
+
+    #
+    # get required data
+    #
+    $sql->execute( );
+
+
+    my $dataref = $sql->fetchall_arrayref;
+    my $len = @$dataref;
+
+    my $weblogs = [];
+    
+    for ( my $l = 0; $l < $len; $l++ ) 
+    {
+	my $entry = @$dataref[$l];
+	my @entry = @$entry;
+
+
+	push ( @$weblogs,
+	       {
+		   id       => $entry[0],
+		   user     => $entry[1],
+		   title    => $entry[2],
+		   body     => $entry[3],
+		   date     => $entry[4],
+		   comments => $entry[5],
+	       } );
+    }
+
+    return( $weblogs );
+}
+
+
+sub writeHTML 
+{
+    my ( @entries ) = ( @_ );
+
+    my $template = HTML::Template->new( filename => "templates/index.tmpl" );
+
+    $template->param( 'blogs', @entries );
+
+    open( OUTPUT, ">html/index.html" );
+    print OUTPUT $template->output();
+    close( OUTPUT );
+
 }
