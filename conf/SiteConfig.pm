@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 
-
-# stuff to export get_conf function properly
+#
+#  Make this a 'real module'.
+#
 package conf::SiteConfig;
 require Exporter;
 @ISA    = qw ( Exporter );
@@ -15,17 +16,30 @@ sub get_conf
 {
     my $requested = $_[0];
 
-    $dbuser = 'yawns';	
-    $dbpass = 'yawns';  
-    $dbname = 'yawns';	
+    $dbuser = 'yawns';	# Database user to connect with.
+    $dbpass = 'yawns';  # Database password to connect with.
+    $dbname = 'yawns';	# Database name to connect to.
     $dbserv = '';	
     
+    #
+    # Number of entries to generate. (HTML + feeds).
+    #
     $count	= 30;
 
+    #
+    # Title of the HTML output page.
+    #
     $title  = 'Planet Debian Administration';
+
+    #
+    # Link shown in the header of the planet.
+    #
     $title_link = 'Planet <a href="http://www.debian-administration.org/">Debian Administration</a>';
 
+
+    #
     # return the requested config variable
+    #
     return ( $$requested );
 }
 
