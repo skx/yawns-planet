@@ -18,29 +18,28 @@
   <!-- /tmpl_if -->
 
  <!-- tmpl_loop name='blogs' -->
+  <!-- tmpl_if name="new_date" -->
+   <h2><!-- tmpl_var name="date" --></h2>
+  <!-- /tmpl_if -->
 
- <!-- tmpl_if name="new_date" -->
-  <h2><!-- tmpl_var name="date" --></h2>
- <!-- /tmpl_if -->
-
- <h3><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="user" -->" title="Weblogs for <!-- tmpl_var name="user">"><!-- tmpl_var name="user" --></a>: <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"> <!-- tmpl_var name="title" --></a></h3>
- <div class="entry">
- <!-- tmpl_var name="body" -->
- </div>
- <p class="date">
+  <h3><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="user" -->" title="Weblogs for <!-- tmpl_var name="user">"><!-- tmpl_var name="user" --></a>: <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"> <!-- tmpl_var name="title" --></a></h3>
+  <div class="entry">
+   <!-- tmpl_var name="body" -->
+  </div>
+  <p class="date">
   <!-- tmpl_var name="date" --> <!-- tmpl_var name="time" --> : 
   <!-- tmpl_if name="disabled" -->
    Comments disabled
   <!-- tmpl_else -->
    <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"><!-- tmpl_var name="comments" --> comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>
   <!-- /tmpl_if -->
- </p>
+  </p>
 <!-- /tmpl_loop -->
 
 
  <div class="sidebar">
-  <h2>Subscriptions</h2>
-  <ul>
+ <h2>Subscriptions</h2>
+ <ul>
   <!-- tmpl_loop name="subscriptions" -->
    <li><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="account" -->"><!-- tmpl_var name="fullname" --></a></li>
   <!-- /tmpl_loop -->
@@ -48,13 +47,13 @@
 
   <p><strong>Syndication:</strong><br />
   Complete feeds of all entries are available:<br />
-  <a href="rss10.xml"><img class="button" src="images/rss10.png" width="80" height="15" alt="[RSS 1.0 Feed]"></a>
-  <a href="rss20.xml"><img class="button" src="images/rss20.png" width="80" height="15" alt="[RSS 2.0 Feed]"></a>
+  <a href="/rss10.xml"><img class="button" src="images/rss10.png" width="80" height="15" alt="[RSS 1.0 Feed]"></a>
+  <a href="/rss20.xml"><img class="button" src="images/rss20.png" width="80" height="15" alt="[RSS 2.0 Feed]"></a>
   </p>
 
   <p><strong>Powered by:</strong></p>
   <ul>
-  <li><a href="http://yawns-planet.cvsrepository.org/">Yawns Planet</a></li>
+  <li><a href="http://www.cvsrepository.org/cgi-bin/trac/yawns-planet/dir?d=yawns-planet">Yawns Planet</a></li>
   <li><a href="http://www.debian.org/">Debian GNU/Linux</a></li>
   </ul>
 
