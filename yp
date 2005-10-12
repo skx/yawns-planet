@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.6 2005-10-12 12:33:45 steve Exp $
+# $Id: yp,v 1.7 2005-10-12 12:39:40 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -217,10 +217,23 @@ sub writeHTMLIndex
 {
     my ( @entries ) = ( @_ );
 
+    #
+    # Load the template.
+    #
     my $template = HTML::Template->new( filename => "templates/index.tmpl" );
 
+    #
+    # Add the blogs and subscription information.
+    #
     $template->param( 'blogs', @entries );
     $template->param( 'subscriptions', getSubscriptions( ) );
+
+    #
+    # Setup static parameters.
+    #
+    $template->param( 'title',      get_conf( 'title' ) );
+    $template->param( 'title_link', get_conf( 'title_link' ) );
+
     open( OUTPUT, ">html/index.html" );
     print OUTPUT $template->output();
     close( OUTPUT );

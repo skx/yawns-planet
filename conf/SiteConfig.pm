@@ -21,7 +21,10 @@ sub get_conf
     $dbserv = '';	
     
     $count	= 30;
-    
+
+    $title  = 'Planet Debian Administration';
+    $title_link = 'Planet <a href="http://www.debian-administration.org/">Debian Administration</a>';
+
     # return the requested config variable
     return ( $$requested );
 }
