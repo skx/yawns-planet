@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.7 2005-10-12 12:39:40 steve Exp $
+# $Id: yp,v 1.8 2005-10-12 12:42:08 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -65,7 +65,7 @@ sub getWeblogs
     #
     # Execute the query
     #
-    my $sql = $dbh->prepare( "SELECT id, username, title, bodytext, DATE(ondate), TIME( ondate ),comments FROM weblogs ORDER BY ondate DESC LIMIT 0,$count" );
+    my $sql = $dbh->prepare( 'SELECT id, username, title, bodytext,  date_format( ondate, "%D %M %Y" ), TIME( ondate ),comments FROM weblogs ORDER BY ondate DESC LIMIT 0,' . $count );
     $sql->execute( );
 
 
