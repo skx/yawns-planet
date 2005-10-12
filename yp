@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.5 2005-10-12 12:21:23 steve Exp $
+# $Id: yp,v 1.6 2005-10-12 12:33:45 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -38,10 +38,16 @@ my @entries = getWeblogs( $dbh, get_conf( "count" ) );
 
 #
 #  3. Create output HTML
-writeHTML(@entries);
+#
+writeHTMLIndex( @entries );
+
 
 #  4. Create output XML feeds.
+#  4.1 - FIrst sanitize the entries.
 # 
+
+
+#
 #  5. Disconnect from database.
 #
 $dbh->disconnect();
@@ -57,27 +63,9 @@ sub getWeblogs
     my ( $dbh, $count ) = ( @_ );
 
     #
-    # Execute Query:
+    # Execute the query
     #
-    # SELECT a.gid,a.id, a.username, a.title, a.bodytext, a.ondate, count(b.id)
-    #  FROM weblogs AS a
-    #    INNER JOIN comments AS b
-    #      ON a.gid=b.root AND b.type='w' 
-    #      GROUP by a.ondate DESC LIMIT 0,$count;
-    #
-    #  Hmmm comments are counted in the weblogs table too:
-    #
-    # SELECT gid, id, username, title, bodytext, ondate,comments
-    #  FROM weblogs 
-    #   ORDER BY ondate DESC LIMIT 0, $count
-    #
-    #
-
     my $sql = $dbh->prepare( "SELECT id, username, title, bodytext, DATE(ondate), TIME( ondate ),comments FROM weblogs ORDER BY ondate DESC LIMIT 0,$count" );
-
-    #
-    # get required data
-    #
     $sql->execute( );
 
 
@@ -146,6 +134,7 @@ sub getWeblogs
 }
 
 
+
 #
 #  Return the list of subscribed users.
 #
@@ -182,6 +171,9 @@ sub getSubscriptions
 	my $real_name = $user[0];
 	my $user_name = $user[1];
 
+	#
+	# If the use has no real name set then use their account name.
+	#
 	if (! $real_name )
 	{
 	    $real_name = $user_name ;
@@ -195,14 +187,33 @@ sub getSubscriptions
 
     }
 
+
+    #
+    # Sort the subscriptions appropriately.
+    #
+    @$subscriptions = sort sortByName @$subscriptions;
+
     return( $subscriptions );
 }
 
 
+
+
 #
+# Sort a list of subscriptions by their username, case-insensitive.
 #
+sub sortByName()
+{
+    return( lc($::a->{'fullname'}) cmp lc($::b->{'fullname'}) );
+}
+
+
+
+
 #
-sub writeHTML 
+#  Write the output index.html file
+#
+sub writeHTMLIndex 
 {
     my ( @entries ) = ( @_ );
 
