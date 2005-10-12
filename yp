@@ -13,13 +13,15 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.8 2005-10-12 12:42:08 steve Exp $
+# $Id: yp,v 1.9 2005-10-12 12:54:49 steve Exp $
 
 # Enforce good programming practices
 use strict;
 
 # Modules we use.
 use HTML::Template;
+use POSIX qw/ strftime /;	# time/date string handling functions
+
 
 # Custom modules
 use conf::SiteConfig;
@@ -228,11 +230,14 @@ sub writeHTMLIndex
     $template->param( 'blogs', @entries );
     $template->param( 'subscriptions', getSubscriptions( ) );
 
+    my $time = strftime ("%e %B %Y - %H:%M:%S", localtime);
+
     #
     # Setup static parameters.
     #
     $template->param( 'title',      get_conf( 'title' ) );
     $template->param( 'title_link', get_conf( 'title_link' ) );
+    $template->param( 'updated' ,   $time );
 
     open( OUTPUT, ">html/index.html" );
     print OUTPUT $template->output();
