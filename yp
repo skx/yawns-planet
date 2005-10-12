@@ -13,12 +13,14 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.10 2005-10-12 13:05:17 steve Exp $
+# $Id: yp,v 1.11 2005-10-12 14:19:25 steve Exp $
 
 # Enforce good programming practices
 use strict;
 
 # Modules we use.
+use Date::Manip qw(ParseDate UnixDate Date_ConvTZ);
+use HTML::Entities;
 use HTML::Template;
 use POSIX qw/ strftime /;
 
@@ -44,9 +46,11 @@ my @entries = getWeblogs( $dbh, get_conf( "count" ) );
 writeHTMLIndex( @entries );
 
 
+#
 #  4. Create output XML feeds.
-#  4.1 - FIrst sanitize the entries.
 # 
+writeRSS10( @entries );
+writeRSS20( @entries );
 
 
 #
@@ -244,6 +248,109 @@ sub writeHTMLIndex
     # Open the output file, and write the data.
     #
     my $output = "html/index.html";
+    open( OUTPUT, ">", $output ) 
+	or die "Cannot open output file '$output' - $!@";
+    print OUTPUT $template->output();
+    close( OUTPUT );
+}
+
+
+#
+#
+#
+sub writeRSS10 
+{
+    my ( $weblogs ) = ( @_ );
+
+    my $contents;
+    my $entries;
+
+    #
+    # Read in each available blog entry.  We don't care about
+    # much of the date just:
+    #
+    # Username, ID, title, body, and date.
+    #
+    foreach my $entry ( @$weblogs )
+    {
+	my $title = $entry->{'title'};
+	my $user  = $entry->{'user'};
+	my $id    = $entry->{'id'};
+	my $body  = $entry->{'body'};
+	my $date  = $entry->{'date'};
+	my $time  = $entry->{'time'};
+
+
+	#
+	#  Make sure the date is in the right format for
+	# the RSS v1.0 feed.
+	#
+	my $dp  = ParseDate( $time . " " . $date );
+	$date = UnixDate( $dp, "%Y-%m-%dT%H:%M:00+00:00");
+
+	#
+	#  HTML Encode the title, and body, so that it is valid.
+	#
+	$title = encode_entities( $title );
+	$body  = encode_entities( $body );
+	push( @$contents,
+	      {
+		  username => $user,
+		  id       => $id,
+	      } );
+	
+	push( @$entries,
+	      {
+		  username => $user,
+		  id       => $id,
+		  title    => $title,
+		  bodytext => $body,
+		  date     => $date
+		  } );
+	
+    }
+
+    #
+    # Load the template.
+    #
+    my $template = HTML::Template->new( filename => "templates/rss10.tmpl" );
+
+
+    #
+    #  Set the parameters
+    #
+    $template->param( "contents", $contents );
+    $template->param( "blogentries", $entries );
+
+    #
+    # Open the output file, and write the data.
+    #
+    my $output = "html/rss10.xml";
+    open( RSS10OUTPUT, ">", $output ) 
+	or die "Cannot open output file '$output' - $!@";
+    print RSS10OUTPUT $template->output();
+    close( RSS10OUTPUT );
+}
+
+
+
+#
+#
+#
+sub writeRSS20
+{
+    my ( @entries ) = ( @_ );
+
+    #
+    # Load the template.
+    #
+    my $template = HTML::Template->new( filename => "templates/rss20.tmpl",
+					die_on_bad_params => 0  );
+
+    #
+    # Open the output file, and write the data.
+    #
+    my $output = "html/rss20.xml";
     open( OUTPUT, ">", $output ) 
 	or die "Cannot open output file '$output' - $!@";
     print OUTPUT $template->output();
