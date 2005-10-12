@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.11 2005-10-12 14:19:25 steve Exp $
+# $Id: yp,v 1.12 2005-10-12 14:31:45 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -274,7 +274,7 @@ sub writeRSS10
     foreach my $entry ( @$weblogs )
     {
 	my $title = $entry->{'title'};
-	my $user  = $entry->{'user'};
+	my $user  = $entry->{'username'};
 	my $id    = $entry->{'id'};
 	my $body  = $entry->{'body'};
 	my $date  = $entry->{'date'};
