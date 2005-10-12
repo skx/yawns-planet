@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.16 2005-10-12 15:49:43 steve Exp $
+# $Id: yp,v 1.17 2005-10-12 15:53:10 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -33,11 +33,11 @@ use Singleton::DBI;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION      = '$Id: yp,v 1.16 2005-10-12 15:49:43 steve Exp $';
-our $VERSION      = "";
-$VERSION = join (' ', (split (' ', $REVISION))[1..2]);
-$VERSION =~ s/,v\b//;
-$VERSION =~ s/(\S+)$/($1)/;
+my $REVISION  = '$Id: yp,v 1.17 2005-10-12 15:53:10 steve Exp $';
+my $VERSION   = "";
+$VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
+$VERSION      =~ s/yp,v\b//;
+
 
 
 
