@@ -2,19 +2,41 @@ Yawns-Planet
 ------------
 
   This software is designed to output a "PlanetPlanet" like collection
- of webpages, by directly querying a Yawns database.
+ of webpages.
 
-  This has several attractions:
+
+Rationale
+---------
+
+  Using PlanetPlanet entries are fetched by making HTTP requests to
+ remote servers.  In the case of Yawns it is much more efficient to
+ directly query the database, and avoid the HTTP request and 
+ feed processing.
+
+  This approach also has at least the following advantage(s):
 
 	* It allows the display to contain more information than
           is permitted upon a PlanetPlanet installation.
-        * It doesn't require hitting your webserver to fetch
-          a list of feeds.
 
-  The software will directly query the weblog, users, and 
- comments table to detect the recent weblogs.
+
+Installation
+------------
+
+  Checkout from CVS, then edit the file "conf/SiteConfig.pm" to
+ make sure the database connections are setup.
+
+  Once that has done simply invoke:
+
+	./yp
+
+  This will read the templates from ./templates/ and output
+ files to the directory ./html/
+
+  If you wish you may customize the template files before updating
+ them.  They are standard HTML::Template files.
+
 
 
 Steve
 --
-$Id: README,v 1.1 2005-10-12 11:14:04 steve Exp $
+$Id: README,v 1.2 2005-10-12 12:46:52 steve Exp $
