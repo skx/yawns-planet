@@ -1,6 +1,7 @@
 <html>
  <head>
  <title><!-- tmpl_var name="title" --></title>
+ <link rel="stylesheet" href="/planet.css" type="text/css">
  </head>
 
  <body>
@@ -9,14 +10,17 @@
 
 <!-- tmpl_if name="error" -->
 
-   <h3>Error</h3>
+   <h2>Error</h2>
+   <p><a href="http://planet.debian-administration.org/">Go back to the planet</a>.</p>
 
 <!-- tmpl_else -->
  <!-- tmpl_if name='no_results' -->
-   <h3>No Results Found</h3>
+   <h2>No Results Found</h2>
    <p>No results were found for your term(s) <!-- tmpl_var name='terms' -->.</p>
    <p><a href="http://planet.debian-administration.org/">Go back to the planet</a>.</p>
  <!-- tmpl_else -->
+   <h2>Search Results: <!-- tmpl_var name="terms" --></h2>
+
   <!-- tmpl_loop name="results" -->
    <h3><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="user" -->" title="Weblogs for <!-- tmpl_var name="user">"><!-- tmpl_var name="user" --></a>: <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"> <!-- tmpl_var name="title" --></a></h3>
   <div class="entry">
@@ -28,5 +32,27 @@
  <!-- /tmpl_loop -->
  <!-- /tmpl_if -->
 <!-- /tmpl_if -->
+
+ <div class="sidebar">
+ <h2>Subscriptions</h2>
+ <ul>
+  <!-- tmpl_loop name="subscriptions" -->
+   <li><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="account" -->"><!-- tmpl_var name="fullname" --></a></li>
+  <!-- /tmpl_loop -->
+  </ul>
+
+  <p><strong>Syndication:</strong><br />
+  Complete feeds of all entries are available:<br />
+  <a href="/rss10.xml"><img class="button" src="/images/rss10.png" width="80" height="15" alt="[RSS 1.0 Feed]"></a>
+  <a href="/rss20.xml"><img class="button" src="/images/rss20.png" width="80" height="15" alt="[RSS 2.0 Feed]"></a>
+  </p>
+
+  <p><strong>Powered by:</strong></p>
+  <ul>
+  <li><a href="http://www.cvsrepository.org/cgi-bin/trac/yawns-planet/dir?d=yawns-planet">Yawns Planet</a> v<!-- tmpl_var name="version" --></li>
+  <li><a href="http://www.debian.org/">Debian GNU/Linux</a></li>
+  </ul>
+
+ </div>
  </body>
 </html>
