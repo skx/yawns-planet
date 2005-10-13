@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.10 2005-10-13 15:35:59 steve Exp $
+# $Id: index.cgi,v 1.11 2005-10-13 15:46:16 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -32,7 +32,7 @@ use Singleton::DBI;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: index.cgi,v 1.10 2005-10-13 15:35:59 steve Exp $';
+my $REVISION  = '$Id: index.cgi,v 1.11 2005-10-13 15:46:16 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -64,7 +64,6 @@ my $count;
 #
 # Only perform a search if we were given terms.
 #
-$terms = "Steve";
 if ( defined( $terms ) && length( $terms ) )
 {
    ( $count, $results ) = YawnsBlog::SearchEntries( $terms );
