@@ -26,4 +26,19 @@ isa_ok( $dbh, "DBI::db" );
 #
 ok( $dbh->ping(), "Database connection made" );
 
-$dbh->disconnect();
+#
+# Can we prepare?
+#
+my $sql;
+ok( ( $sql = $dbh->prepare( "SELECT COUNT(username) FROM users" ) ), "Selected" );
+
+#
+# And execute?
+#
+ok( ($sql->execute())[0], "Retrieved value" );
+ok( $sql->finish(), "Finished OK" );
+#
+# Can we disconnect?
+#
+ok( $dbh->disconnect(), "Database disconnection worked OK" );
+
