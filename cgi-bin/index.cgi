@@ -7,13 +7,13 @@
 #
 # ===========================================================================
 # (c) 2005 Steve Kemp <steve@steve.org.uk>
-# This program is free software; you can redistribute it and/or modify 
-# it under the terms of version 2 of the GNU General Public License as 
-# published by the Free Software Foundation.  See the file COPYING for 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of version 2 of the GNU General Public License as
+# published by the Free Software Foundation.  See the file COPYING for
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.7 2005-10-13 13:46:05 steve Exp $
+# $Id: index.cgi,v 1.8 2005-10-13 14:32:33 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -31,7 +31,7 @@ use Singleton::DBI;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: index.cgi,v 1.7 2005-10-13 13:46:05 steve Exp $';
+my $REVISION  = '$Id: index.cgi,v 1.8 2005-10-13 14:32:33 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
