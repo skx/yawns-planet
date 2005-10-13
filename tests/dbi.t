@@ -16,5 +16,14 @@ require_ok( 'Singleton::DBI' );
 #
 my $dbh = Singleton::DBI->instance();
 
+#
+# Is this the right object type?
+#
 isa_ok( $dbh, "DBI::db" );
 
+#
+# Did we really connect to the database?
+#
+ok( $dbh->ping(), "Database connection made" );
+
+$dbh->disconnect();
