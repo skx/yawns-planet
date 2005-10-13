@@ -9,6 +9,7 @@ nop:
 	@echo " commit    - Commit changes, after running check."
 	@echo " diff      - Run a 'cvs diff'."
 	@echo " planet    - Generate the current planet pages."
+	@echo " test      - Run some basic tests."
 	@echo " update    - Update from the CVS repository."
 	@echo " "
 
@@ -27,6 +28,9 @@ diff:
 
 planet:
 	@./yp
+
+test:
+	cd tests && make
 
 update:
 	cvs -z3 update -A -d 2>/dev/null
