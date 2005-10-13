@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.8 2005-10-13 14:32:33 steve Exp $
+# $Id: index.cgi,v 1.9 2005-10-13 15:09:15 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -25,13 +25,14 @@ use HTML::Template;
 
 # Custom modules
 use conf::SiteConfig;
+use YawnsBlog;
 use Singleton::DBI;
 
 
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: index.cgi,v 1.8 2005-10-13 14:32:33 steve Exp $';
+my $REVISION  = '$Id: index.cgi,v 1.9 2005-10-13 15:09:15 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -213,7 +214,7 @@ sub showResults
     $template->param( 'title_link', get_conf( 'title_link' ) );
     $template->param( 'terms',      encode_entities( $cgi->param( "terms" ) ) );
     $template->param( 'version' ,   $VERSION );
-    $template->param( 'subscriptions', getSubscriptions( ) );
+    $template->param( 'subscriptions', YawnsBlog::Posters() );
 
 
     if ( ! $results )
@@ -238,80 +239,3 @@ sub showResults
 
     print $template->output();
 }
-
-
-#
-#  Return the list of subscribed users.
-#
-# TODO: This is copied from ../yp - merge into a module?
-#
-sub getSubscriptions
-{
-    my ($dbh ) = Singleton::DBI->instance();
-
-    #
-    # Find the posters.
-    #
-    my $query = "SELECT DISTINCT a.realname,a.username FROM users AS a INNER JOIN weblogs AS b ON a.username = b.username";
-
-    my $sql = $dbh->prepare( $query );
-    $sql->execute();
-
-    #
-    # Get all the results.
-    #
-    my $dataref  = $sql->fetchall_arrayref();
-    my @datalist = @$dataref;
-    $sql->finish();
-
-    # Data from the query
-    my $user = ();
-    my $subscriptions = [];
-
-    foreach my $data ( @datalist )
-    {
-	my @user = @$data;
-
-	#
-	#  Find the data.
-	#
-	my $real_name = $user[0];
-	my $user_name = $user[1];
-
-	#
-	# If the use has no real name set then use their account name.
-	#
-	if (! $real_name )
-	{
-	    $real_name = $user_name ;
-	}
-
-	$real_name = encode_entities( $real_name );
-	push ( @$subscriptions,
-	       {
-		   account => $user_name,
-		   fullname => $real_name
-		   });
-
-    }
-
-
-    #
-    # Sort the subscriptions appropriately.
-    #
-    @$subscriptions = sort sortByName @$subscriptions;
-
-    return( $subscriptions );
-}
-
-
-#
-# Sort a list of subscriptions by their username, case-insensitive.
-#
-# TODO: This is copied from ../yp - merge into a module?
-#
-sub sortByName()
-{
-    return( lc($::a->{'fullname'}) cmp lc($::b->{'fullname'}) );
-}
-
