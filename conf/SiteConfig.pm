@@ -26,6 +26,15 @@ sub get_conf
     #
     $count	= 30;
 
+
+    #
+    # Does our version of Yawns support weblog comments?
+    #
+    # 1 for Steve's fork.
+    # 0 for Denny's original code.
+    #
+    $has_comments = 1;
+
     #
     # The directory to load the HTML::Template files from.
     $template_dir = "templates/";

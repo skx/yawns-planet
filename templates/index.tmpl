@@ -28,7 +28,9 @@
    <!-- tmpl_var name="body" -->
   </div>
   <p class="date">
-  <!-- tmpl_var name="date" --> <!-- tmpl_var name="time" --> : 
+  <!-- tmpl_var name="date" --> <!-- tmpl_var name="time" --> 
+
+  <!-- tmpl_if name="has_comments" --> :
   <!-- tmpl_if name="disabled" -->
    Comments disabled
   <!-- tmpl_else -->
@@ -38,6 +40,7 @@
     <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"><!-- tmpl_var name="comments" --> comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>.
    <!-- /tmpl_if -->
   <!-- /tmpl_if -->
+   <!-- /tmpl_if -->
   </p>
 <!-- /tmpl_loop -->
 

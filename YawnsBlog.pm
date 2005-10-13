@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.1 2005-10-13 15:09:15 steve Exp $
+# $Id: YawnsBlog.pm,v 1.2 2005-10-13 15:35:59 steve Exp $
 
 
 #
@@ -22,7 +22,7 @@
 package YawnsBlog;
 require Exporter;
 @ISA    = qw ( Exporter );
-@EXPORT = qw ( Entries Posters );
+@EXPORT = qw ( Entries Posters SearchEntries );
 
 
 #
@@ -33,6 +33,7 @@ use HTML::Entities;
 #
 # Custom modules
 #
+use conf::SiteConfig;
 use Singleton::DBI;
 
 
@@ -49,9 +50,22 @@ sub Entries
     my $dbh = Singleton::DBI->instance();
 
     #
+    # Do we support comments
+    #
+    my $has_comments = get_conf( "has_comments" );
+
+    #
     # Execute the query
     #
-    my $sql = $dbh->prepare( 'SELECT id, username, title, bodytext,  date_format( ondate, "%D %M %Y" ), TIME( ondate ),comments FROM weblogs ORDER BY ondate DESC LIMIT 0,' . $count );
+    my $sql;
+    if ( $has_comments )
+    {
+	$sql = $dbh->prepare( 'SELECT id, username, title, bodytext,  date_format( ondate, "%D %M %Y" ), TIME( ondate ),comments FROM weblogs ORDER BY ondate DESC LIMIT 0,' . $count );
+    }
+    else
+    {
+	$sql = $dbh->prepare( 'SELECT id, username, title, bodytext,  date_format( ondate, "%D %M %Y" ), TIME( ondate ) FROM weblogs ORDER BY ondate DESC LIMIT 0,' . $count );
+    }
     $sql->execute( );
 
 
@@ -68,16 +82,48 @@ sub Entries
 
 
 	#
-	# 0 comments
-	# 1 comment
-	# 2 comments
-	# ..
-	my $comments = $entry[6];
-	my $plural = 1;
-	if ( $comments eq 1 )
+	# Defaults.
+	#
+	my $comments          = "";
+	my $plural            = 1;
+	my $comments_disabled = 0;
+	my $no_comments       = 0;
+
+	#
+	#  If the webblog table has comments then use them to setup
+	# the links.
+	#
+	if ( $has_comments )
 	{
-	   $plural = 0;
+	    $comments = $entry[6];
+
+	    #
+	    # 0 comments
+	    # 1 comment
+	    # 2 comments
+	    # ..
+	    if ( $comments eq 1 )
+	    {
+		$plural = 0;
+	    }
+
+	    #
+	    # Check for comments being disabled
+	    #
+	    if ( $comments <  0 )
+	    {
+		$comments_disabled = 1;
+	    }
+
+	    #
+	    # Show different text if there are no comments.
+	    #
+	    if ( $comments ==  0 )
+	    {
+		$no_comments = 1;
+	    }
 	}
+
 
 	#
 	# Check for new date
@@ -91,38 +137,20 @@ sub Entries
 	}
 	$prevDate = $date;
 
-
-	#
-	# Check for comments being disabled
-	#
-	my $comments_disabled = 0;
-	if ( $comments <  0 )
-	{
-	    $comments_disabled = 1;
-	}
-
-	#
-	# Show different text if there are no comments.
-	#
-	my $no_comments = 0;
-	if ( $comments ==  0 )
-	{
-	    $no_comments = 1;
-	}
-
 	push ( @$weblogs,
 	       {
-		   id          => $entry[0],
-		   user        => $entry[1],
-		   title       => $entry[2],
-		   body        => $entry[3],
-		   date        => $date,
-		   time        => $time,
-		   comments    => $comments,
-		   no_comments => $no_comments,
-		   disabled    => $comments_disabled,
-		   plural      => $plural,
-		   new_date    => $new_date,
+		   id           => $entry[0],
+		   user         => $entry[1],
+		   title        => $entry[2],
+		   body         => $entry[3],
+		   date         => $date,
+		   time         => $time,
+		   comments     => $comments,
+	           has_comments => $has_comments,
+		   no_comments  => $no_comments,
+		   disabled     => $comments_disabled,
+		   plural       => $plural,
+		   new_date     => $new_date,
 	       } );
     }
 
@@ -204,6 +232,130 @@ sub Posters
 sub sortByName()
 {
     return( lc($::a->{'fullname'}) cmp lc($::b->{'fullname'}) );
+}
+
+
+
+#
+#  Perform a search against blog entries.  Optionally ignore the
+# comment field in the database - it might not be present.
+#
+sub SearchEntries
+{
+    my ( $terms ) = ( @_ );
+
+    #
+    # Connect to the database.
+    #
+    my ( $dbh ) = Singleton::DBI->instance();
+
+    my @terms = split( /[ \t]/, $terms );
+
+
+    #
+    # Do we support comments
+    #
+    my $has_comments = get_conf( "has_comments" );
+
+    my $querystr;
+
+    if ( $has_comments )
+    {
+	$querystr = 'SELECT id,username,title, date_format( ondate, "%D %M %Y" ),time(ondate),bodytext,comments FROM weblogs WHERE ';
+    }
+    else
+    {
+	$querystr = 'SELECT id,username,title, date_format( ondate, "%D %M %Y" ),time(ondate),bodytext FROM weblogs WHERE ';
+    }
+
+    my $count = 0;
+    foreach my $term ( @terms )
+    {
+	if ( $count )
+	{
+	    $querystr .= " AND";
+	}
+
+	$querystr .= " bodytext LIKE " . $dbh->quote( "%" . $term . "%" );
+	$count += 1;
+    }
+
+    my $query = $dbh->prepare( $querystr );
+    $query->execute( ) or print $dbh->errstr();
+
+    my $result_ref  = $query->fetchall_arrayref();
+    my @results     = @$result_ref;
+    my $resultsloop = [];
+    my $rcount      = 0;
+
+    foreach ( @results )
+    {
+	my @result = @$_;
+
+	# Increase result count.
+	$rcount ++;
+
+	#
+	# Defaults.
+	#
+	my $comments          = "";
+	my $plural            = 1;
+	my $comments_disabled = 0;
+	my $no_comments       = 0;
+
+	#
+	#  If the webblog table has comments then use them to setup
+	# the links.
+	#
+	if ( $has_comments )
+	{
+	    $comments = $result[6];
+
+	    #
+	    # Should there be a "s" shown on the end of "N comment" ?
+	    #   0 comments
+	    #   1 comment
+	    #   2 comments
+	    #
+	    if ( $comments eq 1 )
+	    {
+		$plural = 0;
+	    }
+
+	    #
+	    # Check for comments being disabled
+	    #
+	    if ( $comments <  0 )
+	    {
+		$comments_disabled = 1;
+	    }
+
+	    #
+	    # Show different text if there are no comments.
+	    #
+	    if ( $comments ==  0 )
+	    {
+		$no_comments = 1;
+	    }
+	}
+
+
+	push ( @$resultsloop, {
+			       id          => $result[0],
+			       user        => $result[1],
+			       title       => $result[2],
+			       date        => $result[3],
+			       time        => $result[4],
+			       body        => $result[5],
+			       comments    => $comments,
+			       has_comments => $has_comments,
+			       no_comments => $no_comments,
+			       disabled    => $comments_disabled,
+			       plural      => $plural,
+				  } );
+    }
+
+    return ( $rcount, $resultsloop );
 }
 
 
