@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.2 2005-10-13 15:35:59 steve Exp $
+# $Id: YawnsBlog.pm,v 1.3 2005-10-13 15:40:28 steve Exp $
 
 
 #
@@ -279,6 +279,11 @@ sub SearchEntries
 	$querystr .= " bodytext LIKE " . $dbh->quote( "%" . $term . "%" );
 	$count += 1;
     }
+
+    #
+    # Make sure the results are Newest > Oldest
+    #
+    $querystr .= " ORDER BY ondate DESC";
 
     my $query = $dbh->prepare( $querystr );
     $query->execute( ) or print $dbh->errstr();
