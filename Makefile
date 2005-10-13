@@ -20,7 +20,7 @@ clean:
 	@find . -name '*~' -exec rm \{\} \;
 	@find . -name '*.bak' -exec rm \{\} \;
 
-commit:
+commit: test
 	cvs -z3 commit
 
 diff:
