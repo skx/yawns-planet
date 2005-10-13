@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.1 2005-10-13 11:04:43 steve Exp $
+# $Id: index.cgi,v 1.2 2005-10-13 11:12:24 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -27,6 +27,10 @@ use conf::SiteConfig;
 use Singleton::DBI;
 
 
+#
+# 0. Print CGI header.
+#
+print "Content-type: text/html\n\n";
 
 #
 # 1. Connect to database.
@@ -43,16 +47,17 @@ my $terms = $cgi->param( "terms" );
 # 3. Find matching entries.
 #
 my $results;
+my $count;
 
 if ( defined( $terms ) && length( $terms ) )
 {
-    $results = performSearch( $terms );
+   ( $count, $results ) = performSearch( $terms );
 }
 
 #
 # 4. Show results / error
 #
-showResults( $results );
+showResults( $count, $results );
 
 
 #
@@ -72,7 +77,7 @@ sub performSearch
 
     my @terms = split( /[ \t]/, $terms );
 
-    my $querystr = "SELECT id,author,title,ondate,bodytext FROM weblogs WHERE ";
+    my $querystr = "SELECT id,username,title,ondate,bodytext FROM weblogs WHERE ";
 
     my $count = 0;
 
@@ -87,17 +92,20 @@ sub performSearch
 	$count += 1;
     }
 
-
     my $query = $dbh->prepare( $querystr );
     $query->execute( ) or print $dbh->errstr();
 
-    my $result_ref = $query->fetchall_arrayref();
-    my @results = @$result_ref;
+    my $result_ref  = $query->fetchall_arrayref();
+    my @results     = @$result_ref;
     my $resultsloop = [];
-    foreach ( @results ) 
+    my $count       = 0;
+
+    foreach ( @results )
     {
 	my @result = @$_;
-	my ( $str_date ) = convert_date_to_site( $result[4] );
+
+	$count ++;
+
 	push ( @$resultsloop, {
 	                          id    => $result[0],
 	                          user  => $result[1],
@@ -108,14 +116,13 @@ sub performSearch
 	       );
     }
 
-    return ( $resultsloop );
-
+    return ( $count, $resultsloop );
 }
 
 
 sub showResults
 {
-    my ( $results ) = ( @_ );
+    my ( $count, $results ) = ( @_ );
 
     #
     # Load the template.
@@ -124,6 +131,7 @@ sub showResults
 
     $template->param( 'title',      get_conf( 'title' ) );
     $template->param( 'title_link', get_conf( 'title_link' ) );
+    $template->param( 'terms',      $cgi->param( "terms" ) );
 
     if ( ! $results )
     {
@@ -131,6 +139,10 @@ sub showResults
     }
     else
     {
+	my $empty = undef;
+	if ( $count == 0 ) { $empty = 1; }
+
+	$template->param( 'no_results', $empty );
 	$template->param( 'results', $results );
     }
 
