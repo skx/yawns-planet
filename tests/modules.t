@@ -12,6 +12,9 @@ require_ok( 'conf::SiteConfig' );
 BEGIN { use_ok( 'CGI' ); }
 require_ok( 'CGI' );
 
+BEGIN { use_ok( 'Date::Manip' ); }
+require_ok( 'Date::Manip' );
+
 BEGIN { use_ok( 'DBI' ); }
 require_ok( 'DBI' );
 
@@ -20,4 +23,11 @@ require_ok( 'HTML::Entities' );
 
 BEGIN { use_ok( 'HTML::Template' ); }
 require_ok( 'HTML::Template' );
+
+BEGIN { use_ok( 'POSIX' ); }
+require_ok( 'POSIX' );
+
+BEGIN { use_ok( 'Singleton::DBI' ); }
+require_ok( 'Singleton::DBI' );
+
 
