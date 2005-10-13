@@ -19,12 +19,30 @@ sub get_conf
     $dbuser = 'yawns';	# Database user to connect with.
     $dbpass = 'yawns';  # Database password to connect with.
     $dbname = 'yawns';	# Database name to connect to.
-    $dbserv = '';	
-    
+    $dbserv = '';
+
     #
     # Number of entries to generate. (HTML + feeds).
     #
     $count	= 30;
+
+    #
+    # The output location for the HTML page.
+    #
+    $htmlOutput = "html/index.html";
+
+
+    #
+    # The output location for the RSS v1.0
+    #
+    $rss1Output = "html/rss10.xml";
+
+
+    #
+    # The output location for the RSS v2.0 feed.
+    #
+    $rss2Output = "html/rss20.xml";
+
 
     #
     # Title of the HTML output page.
