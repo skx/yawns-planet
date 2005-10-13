@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.5 2005-10-13 13:24:24 steve Exp $
+# $Id: index.cgi,v 1.6 2005-10-13 13:26:42 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -31,7 +31,7 @@ use Singleton::DBI;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: index.cgi,v 1.5 2005-10-13 13:24:24 steve Exp $';
+my $REVISION  = '$Id: index.cgi,v 1.6 2005-10-13 13:26:42 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -177,14 +177,19 @@ sub showResults
     my $TEMPLATE = get_conf( "template_dir" );
 
     #
-    # If it starts with a leadking "/", or "\" then it is absolute.
+    # If it starts with a leadking "/" then it is absolute.
     # otherwise it is realitive to the "yawns-planet" directory so
     # needs to be modified.
     #
-    if ( $TEMPLATE =~ /^[\/\\]/ )
+    if ( $TEMPLATE =~ /^\/(.*)/ )
+    {
+	# Ignore the template directory it is fine.
+    }
+    else
     {
 	$TEMPLATE = "../" . $TEMPLATE;
     }
+
     my $template = HTML::Template->new( filename => $TEMPLATE . "results.tmpl" );
 
     $template->param( 'title',      get_conf( 'title' ) );
