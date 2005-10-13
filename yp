@@ -7,19 +7,19 @@
 #
 # ===========================================================================
 # (c) 2005 Steve Kemp <steve@steve.org.uk>
-# This program is free software; you can redistribute it and/or modify 
-# it under the terms of version 2 of the GNU General Public License as 
-# published by the Free Software Foundation.  See the file COPYING for 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of version 2 of the GNU General Public License as
+# published by the Free Software Foundation.  See the file COPYING for
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.21 2005-10-13 13:24:24 steve Exp $
+# $Id: yp,v 1.22 2005-10-13 14:30:41 steve Exp $
 
 # Enforce good programming practices
 use strict;
 
 # Modules we use.
-use Date::Manip qw(ParseDate UnixDate Date_ConvTZ);
+use Date::Manip qw(ParseDate UnixDate);
 use HTML::Entities;
 use HTML::Template;
 use POSIX qw/ strftime /;
@@ -33,7 +33,7 @@ use Singleton::DBI;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: yp,v 1.21 2005-10-13 13:24:24 steve Exp $';
+my $REVISION  = '$Id: yp,v 1.22 2005-10-13 14:30:41 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -44,7 +44,22 @@ $VERSION      =~ s/yp,v\b//;
 #
 my $TEMPLATES = get_conf( "template_dir" );
 
+if ( ! -d $TEMPLATES )
+{
+    print <<E_O_ERROR;
 
+The templates directory you have chosen doesn't appear to exist:
+
+  $TEMPLATES
+
+Please update the following configuration file to correct this:
+
+  'conf/SiteConfig.pm'
+
+Exiting.
+E_O_ERROR
+    exit;
+}
 
 #
 #  1. Connect to the database
@@ -64,7 +79,7 @@ writeHTMLIndex( @entries );
 
 #
 #  4. Create output XML feeds.
-# 
+#
 writeRSS10( @entries );
 writeRSS20( @entries );
 
@@ -97,7 +112,7 @@ sub getWeblogs
     my $weblogs  = [];
     my $prevDate = '';
 
-    for ( my $l = 0; $l < $len; $l++ ) 
+    for ( my $l = 0; $l < $len; $l++ )
     {
 	my $entry = @$dataref[$l];
 	my @entry = @$entry;
@@ -106,7 +121,7 @@ sub getWeblogs
 	#
 	# 0 comments
 	# 1 comment
-	# 2 comments 
+	# 2 comments
 	# ..
 	my $comments = $entry[6];
 	my $plural = 1;
@@ -114,7 +129,7 @@ sub getWeblogs
 	{
 	   $plural = 0;
 	}
-	
+
 	#
 	# Check for new date
 	#
@@ -231,7 +246,6 @@ sub getSubscriptions
 
 
 
-
 #
 # Sort a list of subscriptions by their username, case-insensitive.
 #
@@ -242,11 +256,10 @@ sub sortByName()
 
 
 
-
 #
 #  Write the output index.html file
 #
-sub writeHTMLIndex 
+sub writeHTMLIndex
 {
     my ( @entries ) = ( @_ );
 
@@ -284,6 +297,7 @@ sub writeHTMLIndex
 }
 
 
+
 #
 #  Write out an RSS v1.0 formatted XML file from the weblog
 # entries.
@@ -292,7 +306,7 @@ sub writeHTMLIndex
 # correctly - taking care to modify the date to the appropriate
 # format.
 #
-sub writeRSS10 
+sub writeRSS10
 {
     my ( $weblogs ) = ( @_ );
 
@@ -319,20 +333,24 @@ sub writeRSS10
 	#  Make sure the date is in the right format for
 	# the RSS v1.0 feed.
 	#
+	# e.g.
+	#      2005-10-11T14:39:00+00:00
+	#
 	my $dp  = ParseDate( $time . " " . $date );
 	$date = UnixDate( $dp, "%Y-%m-%dT%H:%M:00+00:00");
 
 	#
-	#  HTML Encode the title, and body, so that it is valid.
+	#  HTML Encode the title, and body, so that it is valid XML
 	#
 	$title = encode_entities( $title );
 	$body  = encode_entities( $body );
+
 	push( @$contents,
 	      {
 		  username => $user,
 		  id       => $id,
 	      } );
-	
+
 	push( @$entries,
 	      {
 		  username => $user,
@@ -341,14 +359,13 @@ sub writeRSS10
 		  bodytext => $body,
 		  date     => $date
 		  } );
-	
+
     }
 
     #
     # Load the template.
     #
     my $template = HTML::Template->new( filename =>  $TEMPLATES . "rss10.tmpl" );
-
 
     #
     #  Set the parameters
@@ -409,7 +426,7 @@ sub writeRSS20
 	$date = UnixDate( $dp, "%a, %d %b %Y %H:%M:%S +0000" );
 
 	#
-	#  HTML Encode the title, and body, so that it is valid.
+	#  HTML Encode the title, and body, so that it is valid XML
 	#
 	$title = encode_entities( $title );
 	$body  = encode_entities( $body );
@@ -422,7 +439,7 @@ sub writeRSS20
 		  bodytext => $body,
 		  date     => $date
 		  } );
-	
+
     }
 
     #
@@ -440,7 +457,7 @@ sub writeRSS20
     # Open the output file, and write the data.
     #
     my $output = get_conf( "rss2Output" );
-    open( OUTPUT, ">", $output ) 
+    open( OUTPUT, ">", $output )
 	or die "Cannot open output file '$output' - $!@";
     print OUTPUT $template->output();
     close( OUTPUT );
