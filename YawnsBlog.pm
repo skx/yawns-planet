@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.4 2005-10-13 15:41:55 steve Exp $
+# $Id: YawnsBlog.pm,v 1.5 2005-10-13 15:45:12 steve Exp $
 
 
 #
@@ -312,18 +312,6 @@ sub SearchEntries
 	my $no_comments       = 0;
 
 	#
-	# Check for new date
-	#
-	my $new_date = 0;
-	my $date     = $entry[4];
-	my $time     = $entry[5];
-	if ( $date ne $prevDate )
-	{
-	    $new_date = 1;
-	}
-	$prevDate = $date;
-
-	#
 	#  If the webblog table has comments then use them to setup
 	# the links.
 	#
@@ -359,6 +347,16 @@ sub SearchEntries
 	    }
 	}
 
+	#
+	# Check for new date
+	#
+	my $new_date = 0;
+	my $date     = $result[3];
+	if ( $date ne $prevDate )
+	{
+	    $new_date = 1;
+	}
+	$prevDate = $date;
 
 	push ( @$resultsloop, {
 			       id          => $result[0],
@@ -372,7 +370,7 @@ sub SearchEntries
 			       no_comments => $no_comments,
 			       disabled    => $comments_disabled,
 			       plural      => $plural,
-			       new_date    => $new_date;
+			       new_date    => $new_date
 				  } );
     }
 
