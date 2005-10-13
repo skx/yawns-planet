@@ -27,6 +27,12 @@ sub get_conf
     $count	= 30;
 
     #
+    # The directory to load the HTML::Template files from.
+    $template_dir = "templates/";
+
+
+    #
+    #
     # The output location for the HTML page.
     #
     $htmlOutput = "html/index.html";
