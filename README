@@ -51,26 +51,34 @@ Requirements
 Installation
 ------------
 
-  Checkout from CVS, then edit the file "conf/SiteConfig.pm" to
- make sure the database connections are setup.
+  Checkout from CVS:
 
-  Once that has done simply invoke:
+    cvs -d:pserver:anonymous@cvsrepository.org:/home/cvs login
+    cvs -d:pserver:anonymous@cvsrepository.org:/home/cvs co yawns-planet
+
+  Once you have a copy of the software downloaded you will need to
+ configure it by editting the file "conf/SiteConfig.pm". The settings
+ there should be obvious.
+
+  After you have changed any settings you care about you can generate
+ an output of a static planet page, and associated feeds by running:
 
 	./yp
+  or
 
-  This will read the templates from ./templates/ and output
- files to the directory ./html/
+	make planet
 
   If you wish you may customize the template files before updating
  them.  (They are standard HTML::Template files.)
 
 
 
-Apache Setup
+Search Setup
 ------------
 
-  Apache should be setup to allow CGI scripts to run if you wish
- to use the search function.
+  If you wish to allow users to search previous entries for keywords
+ then you must ensure that you have an Apache setup which allows execution
+ of CGI scripts.
 
   Installation will look something like this:
 
@@ -93,6 +101,19 @@ Apache Setup
 	</VirtualHost>
 
 
+Testing
+-------
+
+  There are some minimal code tests included within the tests/
+ subdirectory.
+
+  To execute them run:
+
+	make test
+
+  Any failures are bugs, and should be reported.
+
+
 Steve
 --
-$Id: README,v 1.4 2005-10-13 11:44:07 steve Exp $
+$Id: README,v 1.5 2005-10-13 13:39:08 steve Exp $
