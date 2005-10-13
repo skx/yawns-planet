@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.6 2005-10-13 13:26:42 steve Exp $
+# $Id: index.cgi,v 1.7 2005-10-13 13:46:05 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -31,7 +31,7 @@ use Singleton::DBI;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: index.cgi,v 1.6 2005-10-13 13:26:42 steve Exp $';
+my $REVISION  = '$Id: index.cgi,v 1.7 2005-10-13 13:46:05 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -60,10 +60,14 @@ my $terms = $cgi->param( "terms" );
 my $results;
 my $count;
 
+#
+# Only perform a search if we were given terms.
+#
 if ( defined( $terms ) && length( $terms ) )
 {
    ( $count, $results ) = performSearch( $terms );
 }
+
 
 #
 # 4. Show results / error
@@ -75,6 +79,7 @@ showResults( $count, $results );
 # 5. Disconnect from database.
 #
 $dbh->disconnect();
+
 
 exit;
 
@@ -115,13 +120,13 @@ sub performSearch
     {
 	my @result = @$_;
 
+	# Increase result count.
 	$rcount ++;
-
 
 	#
 	# 0 comments
 	# 1 comment
-	# 2 comments 
+	# 2 comments
 	# ..
 	my $comments = $result[6];
 	my $plural = 1;
@@ -159,25 +164,30 @@ sub performSearch
 			       no_comments => $no_comments,
 			       disabled    => $comments_disabled,
 			       plural      => $plural,
-				  }
-	       );
+				  } );
     }
 
     return ( $rcount, $resultsloop );
 }
 
 
+#
+#  Show the matching results, if any, to the client
+#
+#  If there were no results then we will show that too.
+#
+#
 sub showResults
 {
     my ( $count, $results ) = ( @_ );
 
     #
-    # Load the template.
+    # Find the template input directory.
     #
     my $TEMPLATE = get_conf( "template_dir" );
 
     #
-    # If it starts with a leadking "/" then it is absolute.
+    # If it starts with a leading "/" then it is an absolute path.
     # otherwise it is realitive to the "yawns-planet" directory so
     # needs to be modified.
     #
@@ -190,20 +200,35 @@ sub showResults
 	$TEMPLATE = "../" . $TEMPLATE;
     }
 
+
+    #
+    # Load the template
+    #
     my $template = HTML::Template->new( filename => $TEMPLATE . "results.tmpl" );
 
+    #
+    # Fill in the parameters.
+    #
     $template->param( 'title',      get_conf( 'title' ) );
     $template->param( 'title_link', get_conf( 'title_link' ) );
     $template->param( 'terms',      encode_entities( $cgi->param( "terms" ) ) );
     $template->param( 'version' ,   $VERSION );
     $template->param( 'subscriptions', getSubscriptions( ) );
 
+
     if ( ! $results )
     {
+	#
+	# No results is an error so show that.
+	#
 	$template->param( 'error', 1 );
     }
     else
     {
+	#
+	# Show the results, and setup 'no_results' if no matching
+	# blogs were found.
+	#
 	my $empty = undef;
 	if ( $count == 0 ) { $empty = 1; }
 
@@ -217,6 +242,8 @@ sub showResults
 
 #
 #  Return the list of subscribed users.
+#
+# TODO: This is copied from ../yp - merge into a module?
 #
 sub getSubscriptions
 {
@@ -280,6 +307,8 @@ sub getSubscriptions
 
 #
 # Sort a list of subscriptions by their username, case-insensitive.
+#
+# TODO: This is copied from ../yp - merge into a module?
 #
 sub sortByName()
 {
