@@ -22,6 +22,11 @@
    <h2>Search Results: <!-- tmpl_var name="terms" --></h2>
 
   <!-- tmpl_loop name="results" -->
+ <!-- tmpl_loop name='blogs' -->
+  <!-- tmpl_if name="new_date" -->
+   <h2><!-- tmpl_var name="date" --></h2>
+  <!-- /tmpl_if -->
+
    <h3><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="user" -->" title="Weblogs for <!-- tmpl_var name="user">"><!-- tmpl_var name="user" --></a>: <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->"> <!-- tmpl_var name="title" --></a></h3>
   <div class="entry">
    <!-- tmpl_var name="body" -->

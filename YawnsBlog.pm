@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.3 2005-10-13 15:40:28 steve Exp $
+# $Id: YawnsBlog.pm,v 1.4 2005-10-13 15:41:55 steve Exp $
 
 
 #
@@ -268,7 +268,10 @@ sub SearchEntries
 	$querystr = 'SELECT id,username,title, date_format( ondate, "%D %M %Y" ),time(ondate),bodytext FROM weblogs WHERE ';
     }
 
-    my $count = 0;
+    my $count    = 0;
+    my $prevDate = '';
+
+
     foreach my $term ( @terms )
     {
 	if ( $count )
@@ -307,6 +310,18 @@ sub SearchEntries
 	my $plural            = 1;
 	my $comments_disabled = 0;
 	my $no_comments       = 0;
+
+	#
+	# Check for new date
+	#
+	my $new_date = 0;
+	my $date     = $entry[4];
+	my $time     = $entry[5];
+	if ( $date ne $prevDate )
+	{
+	    $new_date = 1;
+	}
+	$prevDate = $date;
 
 	#
 	#  If the webblog table has comments then use them to setup
@@ -357,6 +372,7 @@ sub SearchEntries
 			       no_comments => $no_comments,
 			       disabled    => $comments_disabled,
 			       plural      => $plural,
+			       new_date    => $new_date;
 				  } );
     }
 
