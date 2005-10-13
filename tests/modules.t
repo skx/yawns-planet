@@ -30,4 +30,7 @@ require_ok( 'POSIX' );
 BEGIN { use_ok( 'Singleton::DBI' ); }
 require_ok( 'Singleton::DBI' );
 
+BEGIN { use_ok( 'YawnsBlog' ); }
+require_ok( 'YawnsBlog' );
+
 
