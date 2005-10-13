@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.3 2005-10-13 11:18:28 steve Exp $
+# $Id: index.cgi,v 1.4 2005-10-13 11:25:42 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -31,7 +31,7 @@ use Singleton::DBI;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: index.cgi,v 1.3 2005-10-13 11:18:28 steve Exp $';
+my $REVISION  = '$Id: index.cgi,v 1.4 2005-10-13 11:25:42 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -88,7 +88,7 @@ sub performSearch
 
     my @terms = split( /[ \t]/, $terms );
 
-    my $querystr = "SELECT id,username,title,ondate,bodytext FROM weblogs WHERE ";
+    my $querystr = 'SELECT id,username,title, date_format( ondate, "%D %M %Y" ),time(ondate),bodytext,comments FROM weblogs WHERE ';
 
     my $count = 0;
 
@@ -117,12 +117,48 @@ sub performSearch
 
 	$rcount ++;
 
+
+	#
+	# 0 comments
+	# 1 comment
+	# 2 comments 
+	# ..
+	my $comments = $result[6];
+	my $plural = 1;
+	if ( $comments eq 1 )
+	{
+	   $plural = 0;
+	}
+
+	#
+	# Check for comments being disabled
+	#
+	my $comments_disabled = 0;
+	if ( $comments <  0 )
+	{
+	    $comments_disabled = 1;
+	}
+
+	#
+	# Show different text if there are no comments.
+	#
+	my $no_comments = 0;
+	if ( $comments ==  0 )
+	{
+	    $no_comments = 1;
+	}
+
 	push ( @$resultsloop, {
-	                          id    => $result[0],
-	                          user  => $result[1],
-				  title => $result[2],
-				  body  => $result[3],
-				  date  => $result[4],
+			       id          => $result[0],
+			       user        => $result[1],
+			       title       => $result[2],
+			       date        => $result[3],
+			       time        => $result[4],
+			       body        => $result[5],
+			       comments    => $comments,
+			       no_comments => $no_comments,
+			       disabled    => $comments_disabled,
+			       plural      => $plural,
 				  }
 	       );
     }
