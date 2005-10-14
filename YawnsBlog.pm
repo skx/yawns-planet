@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w -I.
 
 # ===========================================================================
-# File:		Blog.pm
-# Purpose:	Blog utility functions for a Yawns powered site.
+# File:		YawnsBlog.pm
+# Purpose:	Utility functions working with the Yawns weblogs database table
 # Created:	2005-10-12
 #
 # ===========================================================================
@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.5 2005-10-13 15:45:12 steve Exp $
+# $Id: YawnsBlog.pm,v 1.6 2005-10-14 18:22:38 steve Exp $
 
 
 #
@@ -38,7 +38,8 @@ use Singleton::DBI;
 
 
 #
-#  Return the relevent weblog entries from the database
+#  Return the most recent weblog entries the database.
+#
 #
 sub Entries
 {
@@ -160,7 +161,9 @@ sub Entries
 
 
 #
-#  Return the list of subscribed users.
+#  Return the list of subscribed users - we prefer to use their
+# real names, but if they are not available fall back to returning
+# only their account names.
 #
 sub Posters
 {
@@ -249,6 +252,9 @@ sub SearchEntries
     #
     my ( $dbh ) = Singleton::DBI->instance();
 
+    #
+    # Split up all terms.
+    #
     my @terms = split( /[ \t]/, $terms );
 
 
@@ -257,8 +263,14 @@ sub SearchEntries
     #
     my $has_comments = get_conf( "has_comments" );
 
+    #
+    # Query string we execute.
+    #
     my $querystr;
 
+    #
+    # Build the string up.
+    #
     if ( $has_comments )
     {
 	$querystr = 'SELECT id,username,title, date_format( ondate, "%D %M %Y" ),time(ondate),bodytext,comments FROM weblogs WHERE ';
