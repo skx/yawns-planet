@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: yp,v 1.24 2005-10-13 15:14:33 steve Exp $
+# $Id: yp,v 1.25 2005-10-14 18:17:16 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -27,7 +27,6 @@ use POSIX qw/ strftime /;
 
 # Custom modules
 use conf::SiteConfig;
-use Singleton::DBI;
 use YawnsBlog;
 
 
@@ -35,7 +34,7 @@ use YawnsBlog;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: yp,v 1.24 2005-10-13 15:14:33 steve Exp $';
+my $REVISION  = '$Id: yp,v 1.25 2005-10-14 18:17:16 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -45,43 +44,39 @@ $VERSION      =~ s/yp,v\b//;
 # 0. Find the directory to load the tempaltes from.
 #
 my $TEMPLATES = get_conf( "template_dir" );
-testDirectory( $TEMPLATES );
+testTemplateDirectory( $TEMPLATES );
 
 
-#
-#  1. Connect to the database
-#
-my $dbh = Singleton::DBI->instance();
 
-
-#  2. Get weblog entries.
+#  1. Get weblog entries.
 #
 my @entries = YawnsBlog::Entries( get_conf( "count" ) );
 
 #
-#  3. Create output HTML
+#  2. Create output HTML
 #
 writeHTMLIndex( @entries );
 
 
 #
-#  4. Create output XML feeds.
+#  3. Create output XML feeds.
 #
 writeRSS10( @entries );
 writeRSS20( @entries );
 
 
 #
-#  5. Disconnect from database and exit.
+#  4.  All done.
 #
-$dbh->disconnect();
 exit;
 
 
+
 #
-#  Ensure the given directory exists.
+#  Ensure the given templates directory exists, and that it
+# contains the templates that we will expect to load from it.
 #
-sub testDirectory
+sub testTemplateDirectory
 {
     my ( $directory ) = ( @_ );
 
@@ -100,6 +95,16 @@ Please update the following configuration file to correct this:
 Exiting.
 E_O_ERROR
 	exit;
+    }
+
+    foreach my $file ( qw( index.tmpl rss10.tmpl rss20.tmpl ) )
+    {
+	if ( ! -e $directory . "/" . $file )
+	{
+	    print "Required template file '$file' not found in templates " .
+	          "directory '$directory'\n";
+	    exit;
+	}
     }
 }
 
