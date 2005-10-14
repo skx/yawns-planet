@@ -34,16 +34,12 @@ Requirements
   Using this software makes no sense if you're not running an
  installation of Yawns.
 
-  If you have Yawns installed then the only additional requirements
- are the following Perl modules:
+  If you have Yawns installed already the only additional software
+ you need is the perl module:
 
 	Date::Manip
-	DBI
-	HTML::Entities
-	HTML::Template
   
-  The latter two you will have installed to run Yawns.  The first
- can be installed upon a Debian host with:
+  This can be installed upon a Debian host with the following command:
 
 	apt-get install libdate-manip-perl
 
@@ -60,8 +56,8 @@ Installation
  configure it by editting the file "conf/SiteConfig.pm". The settings
  there should be obvious.
 
-  After you have changed any settings you care about you can generate
- an output of a static planet page, and associated feeds by running:
+  After you have updated any settings you care about you may generate
+ the output pages by running:
 
 	./yp
   or
@@ -82,6 +78,7 @@ Search Setup
 
   Installation will look something like this:
 
+	mkdir -p /home/www/planet.foo.com/
 	cd /home/www/planet.foo.com/
 	cvs -d:pserver:anonymous@cvsrepository.org:/home/cvs login
 	cvs -d:pserver:anonymous@cvsrepository.org:/home/cvs co yawns-planet
@@ -89,7 +86,7 @@ Search Setup
 	ln -s yawns-planet/cgi-bin cgi-bin
 	
 
-  Then your Apache setup will look something like this:
+  The corresponding Apache setup will look something like this:
 
 	<VirtualHost>
 	   ServerName planet.foo.com
@@ -116,4 +113,4 @@ Testing
 
 Steve
 --
-$Id: README,v 1.5 2005-10-13 13:39:08 steve Exp $
+$Id: README,v 1.6 2005-10-14 18:40:44 steve Exp $
