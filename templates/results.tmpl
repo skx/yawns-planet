@@ -11,13 +11,13 @@
 <!-- tmpl_if name="error" -->
 
    <h2>Error</h2>
-   <p><a href="http://planet.debian-administration.org/">Go back to the planet</a>.</p>
+   <p><a href="<!-- tmpl_var name='link' -->">Go back to the planet</a>.</p>
 
 <!-- tmpl_else -->
  <!-- tmpl_if name='no_results' -->
    <h2>No Results Found</h2>
    <p>No results were found for your term(s) <!-- tmpl_var name='terms' -->.</p>
-   <p><a href="http://planet.debian-administration.org/">Go back to the planet</a>.</p>
+   <p><a href="<!-- tmpl_var name='link' -->">Go back to the planet</a>.</p>
  <!-- tmpl_else -->
    <h2>Search Results: <!-- tmpl_var name="terms" --></h2>
 
@@ -50,6 +50,8 @@
 <!-- /tmpl_if -->
 
  <div class="sidebar">
+ <a href="<!-- tmpl_var name='link' -->"><img src="/images/logo.png" alt="Planet Debian Administration Logo" width="200" height="192" border="0"></a>
+
  <h2>Search Entries</h2> 
  <form action="/cgi-bin/index.cgi" method="get">
  Terms: <input type="text" name="terms" size="15">

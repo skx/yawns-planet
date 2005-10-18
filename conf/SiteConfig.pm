@@ -65,6 +65,12 @@ sub get_conf
     $title  = 'Planet Debian Administration';
 
     #
+    # Link to planet homepage
+    #
+    $link   = 'http://planet.debian-administration.org/';
+
+
+    #
     # Link shown in the header of the planet.
     #
     $title_link = 'Planet <a href="http://www.debian-administration.org/">Debian Administration</a>';

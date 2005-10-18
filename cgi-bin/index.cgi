@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.12 2005-10-14 18:19:41 steve Exp $
+# $Id: index.cgi,v 1.13 2005-10-18 23:34:54 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -31,7 +31,7 @@ use YawnsBlog;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: index.cgi,v 1.12 2005-10-14 18:19:41 steve Exp $';
+my $REVISION  = '$Id: index.cgi,v 1.13 2005-10-18 23:34:54 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -118,6 +118,7 @@ sub showResults
     #
     $template->param( 'title',      get_conf( 'title' ) );
     $template->param( 'title_link', get_conf( 'title_link' ) );
+    $template->param( 'link',       get_conf( 'link' ) );
     $template->param( 'terms',      encode_entities( $cgi->param( "terms" ) ) );
     $template->param( 'version' ,   $VERSION );
     $template->param( 'subscriptions', YawnsBlog::Posters() );
