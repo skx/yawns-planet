@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.13 2005-10-18 23:34:54 steve Exp $
+# $Id: index.cgi,v 1.14 2005-10-19 00:37:55 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -31,7 +31,7 @@ use YawnsBlog;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: index.cgi,v 1.13 2005-10-18 23:34:54 steve Exp $';
+my $REVISION  = '$Id: index.cgi,v 1.14 2005-10-19 00:37:55 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -58,7 +58,7 @@ my $count;
 #
 # Only perform a search if we were given terms.
 #
-if ( defined( $terms ) && length( $terms ) )
+if ( ( defined( $terms ) && length( $terms ) && ( $terms =~ /([^ \t]+)/) ) )
 {
    ( $count, $results ) = YawnsBlog::SearchEntries( $terms );
 }
