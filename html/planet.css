@@ -30,16 +30,20 @@ h2 {
 h3 {
 	font-family: "Bitstream Vera Sans", sans-serif;
 	font-weight: normal;
-
 	background-color: #a0c0ff;
 	border: 1px solid #5080b0;
-
 	padding: 4px;
 }
 
 h3 a {
-	text-decoration: none;
-	color: inherit;
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+h3 a:hover {
+	text-decoration: none !important;
+	color: inherit !important;
+
 }
 
 h4 {
@@ -48,7 +52,12 @@ h4 {
 }
 
 h4 a {
-	text-decoration: none;
+	text-decoration: none !important;
+	color: inherit;
+}
+
+h4 a:hover {
+	text-decoration: none !important;
 	color: inherit;
 }
 
@@ -124,6 +133,9 @@ img.face {
 	padding-left: 5px;
 }
 
+a {
+	text-decoration: none;
+}
 a:hover {
 	text-decoration: underline !important;
 	color: blue !important;
