@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.6 2005-10-14 18:22:38 steve Exp $
+# $Id: YawnsBlog.pm,v 1.7 2006-02-04 21:18:06 steve Exp $
 
 
 #
@@ -61,11 +61,11 @@ sub Entries
     my $sql;
     if ( $has_comments )
     {
-	$sql = $dbh->prepare( 'SELECT id, username, title, bodytext,  date_format( ondate, "%D %M %Y" ), TIME( ondate ),comments FROM weblogs ORDER BY ondate DESC LIMIT 0,' . $count );
+	$sql = $dbh->prepare( 'SELECT id, username, title, bodytext,  date_format( ondate, "%D %M %Y" ), TIME( ondate ),comments FROM weblogs WHERE bodytext != "" AND title != "" ORDER BY ondate DESC LIMIT 0,' . $count );
     }
     else
     {
-	$sql = $dbh->prepare( 'SELECT id, username, title, bodytext,  date_format( ondate, "%D %M %Y" ), TIME( ondate ) FROM weblogs ORDER BY ondate DESC LIMIT 0,' . $count );
+	$sql = $dbh->prepare( 'SELECT id, username, title, bodytext,  date_format( ondate, "%D %M %Y" ), TIME( ondate ) FROM weblogs  WHERE bodytext != "" AND title != "" ORDER BY ondate DESC LIMIT 0,' . $count );
     }
     $sql->execute( );
 
