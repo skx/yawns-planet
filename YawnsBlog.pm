@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.7 2006-02-04 21:18:06 steve Exp $
+# $Id: YawnsBlog.pm,v 1.8 2006-03-07 10:08:25 steve Exp $
 
 
 #
@@ -35,7 +35,7 @@ use HTML::Entities;
 #
 use conf::SiteConfig;
 use Singleton::DBI;
-
+use HTML::Cleanup;
 
 #
 #  Return the most recent weblog entries the database.
@@ -138,12 +138,16 @@ sub Entries
 	}
 	$prevDate = $date;
 
+    my $body = $entry[3];
+    $body = HTML::Cleanup::sanitize( $body );
+    $body = HTML::Cleanup::balance($body);
+
 	push ( @$weblogs,
 	       {
 		   id           => $entry[0],
 		   user         => $entry[1],
 		   title        => $entry[2],
-		   body         => $entry[3],
+		   body         => $body,
 		   date         => $date,
 		   time         => $time,
 		   comments     => $comments,
