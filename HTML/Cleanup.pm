@@ -13,13 +13,10 @@ sub sanitize
     my ($text) = (@_);
 
 
-    my @allow = qw[ ul li ol p br hr b a i pre blockquote tt dl dd dt fieldset legend ];
+    my @allow = qw[ ul li ol p br hr small b a i pre blockquote tt dl dd dt fieldset legend ];
     my @rules = (
 		 font => 0,
 		 script => 0,
-		 quote => {
-		     who => 1,
-		 },
          table => 0,
          td    => 0,
          tr    => 0,
