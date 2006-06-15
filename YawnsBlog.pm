@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.8 2006-03-07 10:08:25 steve Exp $
+# $Id: YawnsBlog.pm,v 1.9 2006-06-15 20:50:41 steve Exp $
 
 
 #
@@ -138,9 +138,25 @@ sub Entries
 	}
 	$prevDate = $date;
 
-    my $body = $entry[3];
-    $body = HTML::Cleanup::sanitize( $body );
-    $body = HTML::Cleanup::balance($body);
+	my $body = $entry[3];
+
+	#
+	#  Handle the cut ..
+	#
+	my $cut = 0;
+	if ( $body =~ /(.*)<cut>(.*)/gis )
+	{
+	    $body = $1;
+	    $cut  = 1;
+	}
+
+	$body = HTML::Cleanup::sanitize( $body );
+	$body = HTML::Cleanup::balance($body);
+
+	if ( $cut )
+	{
+	    $body .= "<p>This entry has been cut <a href=\"http://debian-administration.org/users/$entry[1]/weblog/$entry[0]\">read the full entry</a>.</p>";
+	}
 
 	push ( @$weblogs,
 	       {
