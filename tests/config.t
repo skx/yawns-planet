@@ -88,7 +88,7 @@ if ( $TEMPLATE =~ /^\/(.*)/ )
 }
 else
 {
-    # Realative path.
+    # Relative path.
     $TEMPLATE = "../" . $TEMPLATE;
     # Modify it to be as seen from the main directory.
     ok( -d $TEMPLATE, "Template directory exists" );
@@ -96,7 +96,7 @@ else
 
 
 #
-#  Test that all the expected tempalte files exist.
+#  Test that all the expected template files exist.
 #
 ok( -e $TEMPLATE . "index.tmpl",   "index.tmpl exists" );
 ok( -e $TEMPLATE . "rss10.tmpl",   "rss10.tmpl exists" );
