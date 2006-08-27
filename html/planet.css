@@ -70,9 +70,12 @@ img.face {
 	margin-bottom: 2em;
 }
 
-.entry .date {
+.date {
 	font-family: "Bitstream Vera Sans", sans-serif;
-	color: grey;
+	color: black;
+	border-top: 1px solid #5080b0;
+	padding: 4px;
+    text-align: right;
 }
 
 .entry .date a {
