@@ -1,0 +1,3 @@
+Crawl-delay: 10
+Disallow: /cgi-bin/
+Disallow: /stats/
