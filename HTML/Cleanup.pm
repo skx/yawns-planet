@@ -37,6 +37,7 @@ sub sanitize
 		 img => {
 		     src => qr{^(http://)}i,   # only absolute image links allowed
 		     alt => 1,                 # alt attribute allowed
+		     align => 1,               # align attribute allowed
 		     '*' => 0,                 # deny all other attributes
 		 },
 		 a => {
