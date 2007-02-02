@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.11 2006-11-30 15:35:25 steve Exp $
+# $Id: YawnsBlog.pm,v 1.12 2007-02-02 03:46:21 steve Exp $
 
 
 #
@@ -143,11 +143,21 @@ sub Entries
 	#
 	#  Handle the cut ..
 	#
-	my $cut = 0;
-	if ( $body =~ /(.*)<cut>(.*)/gis )
+	my $cut      = 0;
+        my $cut_text = "";
+	if ( $body =~ /(.*)<cut([^>]*)>(.*)/gis )
 	{
 	    $body = $1;
 	    $cut  = 1;
+
+            #
+            #  See if they supplied text="xxxxx"
+            #
+            my $text = $2;
+            if ( defined( $text ) && ( $text =~ /text=['"]([^'"]+)['"]/i ) )
+            {
+                $cut_text = $1;
+            }
 	}
 
 	$body = HTML::Cleanup::sanitize( $body );
@@ -155,7 +165,17 @@ sub Entries
 
 	if ( $cut )
 	{
-	    $body .= "<p>This entry has been cut <a href=\"http://debian-administration.org/users/$entry[1]/weblog/$entry[0]\">read the full entry</a>.</p>";
+            #
+            #  Default
+            #
+            if ( length( $cut_text ) )
+            {
+                $body .= "<p>&lt;cut: <a href=\"$host/users/$item[1]/weblog/$item[0]\" title=\"This entry has been cut; click to read more.\">$cut_text</a>&gt;</p>";
+            }
+            else
+            {
+                $body .= "<p>This entry has been cut <a href=\"$host/users/$item[1]/weblog/$item[0]\">read the full entry</a>.</p>";
+            }
 	}
 
 	push ( @$weblogs,
