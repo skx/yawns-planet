@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.13 2007-02-02 03:48:01 steve Exp $
+# $Id: YawnsBlog.pm,v 1.14 2007-02-02 03:49:10 steve Exp $
 
 
 #
@@ -165,6 +165,8 @@ sub Entries
 
 	if ( $cut )
 	{
+            my $host = 'http://debian-administration.org';
+
             #
             #  Default
             #
