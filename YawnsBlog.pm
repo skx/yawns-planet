@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.14 2007-02-02 03:49:10 steve Exp $
+# $Id: YawnsBlog.pm,v 1.15 2007-02-02 03:55:52 steve Exp $
 
 
 #
@@ -168,15 +168,15 @@ sub Entries
             my $host = 'http://debian-administration.org';
 
             #
-            #  Default
+            # User specified truncation text.
             #
             if ( length( $cut_text ) )
             {
-                $body .= "<p>&lt;cut: <a href=\"$host/users/$entry[1]/weblog/$entry[0]\" title=\"This entry has been cut; click to read more.\">$cut_text</a>&gt;</p>";
+                $body .= "<p><b>(</b><a href=\"$host/users/$entry[1]/weblog/$entry[0]\" title=\"This entry has been truncated; click to read more.\">$cut_text</a><b>)</b></p>";
             }
             else
             {
-                $body .= "<p>This entry has been cut <a href=\"$host/users/$entry[1]/weblog/$entry[0]\">read the full entry</a>.</p>";
+                $body .= "<p>This entry has been truncated <a href=\"$host/users/$entry[1]/weblog/$entry[0]\">read the full entry</a>.</p>";
             }
 	}
 
