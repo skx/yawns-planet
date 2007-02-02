@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.12 2007-02-02 03:46:21 steve Exp $
+# $Id: YawnsBlog.pm,v 1.13 2007-02-02 03:48:01 steve Exp $
 
 
 #
@@ -170,11 +170,11 @@ sub Entries
             #
             if ( length( $cut_text ) )
             {
-                $body .= "<p>&lt;cut: <a href=\"$host/users/$item[1]/weblog/$item[0]\" title=\"This entry has been cut; click to read more.\">$cut_text</a>&gt;</p>";
+                $body .= "<p>&lt;cut: <a href=\"$host/users/$entry[1]/weblog/$entry[0]\" title=\"This entry has been cut; click to read more.\">$cut_text</a>&gt;</p>";
             }
             else
             {
-                $body .= "<p>This entry has been cut <a href=\"$host/users/$item[1]/weblog/$item[0]\">read the full entry</a>.</p>";
+                $body .= "<p>This entry has been cut <a href=\"$host/users/$entry[1]/weblog/$entry[0]\">read the full entry</a>.</p>";
             }
 	}
 
