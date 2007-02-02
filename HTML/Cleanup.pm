@@ -13,15 +13,15 @@ sub sanitize
     my ($text) = (@_);
 
 
-    my @allow = qw[ ul li ol p br hr small b a i pre blockquote tt dl dd dt fieldset legend ];
+    my @allow = qw[ ul li ol p br hr small b a i pre blockquote tt dl dd dt fieldset legend cut ];
     my @rules = (
 		 font => 0,
 		 script => 0,
-         table => 0,
-         td    => 0,
-         tr    => 0,
-         tbody => 0,
-         th    => 0,
+         table => 1,
+         td    => 1,
+         tr    => 1,
+         tbody => 1,
+         th    => 1,
          span => 0,
          div => 0,
          p => {
@@ -40,6 +40,9 @@ sub sanitize
 		     align => 1,               # align attribute allowed
 		     '*' => 0,                 # deny all other attributes
 		 },
+		 cut => {
+		     text => 1,                # HREF
+                      },
 		 a => {
 		     href => 1,                # HREF
 		     name => 1,                # name attribute allowed
