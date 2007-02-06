@@ -26,17 +26,18 @@
   <h3><a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->" title="<!-- tmpl_var name="user">"  rel="nofollow"><!-- tmpl_var name="user" --></a>: <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"> <!-- tmpl_var name="title" --></a></h3>
 
 <div class="tags">
-Tags: <!-- tmpl_if name='tags' -->
+<!-- tmpl_if name='tags' -->
+Tags:
 <!-- tmpl_loop name="tags" -->
 <a href="<!-- tmpl_var name='tag_prefix' --><!-- tmpl_var name="tag" escape="html" -->" title="Find more articles with this tag" rel="tag"><!-- tmpl_var name="tag" --></a><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless -->
 <!-- /tmpl_loop -->
-<!-- tmpl_else -->
-<i>none</i>.
 <!-- /tmpl_if -->
 </div>
+
   <div class="entry">
    <!-- tmpl_var name="body" -->
   </div>
+
   <div class="date">
   <!-- tmpl_var name="date" --> <!-- tmpl_var name="time" --> 
   <!-- tmpl_if name="has_comments" --> :
@@ -51,8 +52,8 @@ Tags: <!-- tmpl_if name='tags' -->
   <!-- /tmpl_if -->
    <!-- /tmpl_if -->
   </div>
-<!-- /tmpl_loop -->
 
+<!-- /tmpl_loop -->
 
  <div class="sidebar">
  <a href="<!-- tmpl_var name='link' -->"><img src="/images/logo.png" alt="Planet Debian Administration Logo" width="200" height="192" border="0"></a>

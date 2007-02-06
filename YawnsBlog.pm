@@ -1,24 +1,33 @@
-#!/usr/bin/perl -w -I.
 
-# ===========================================================================
-# File:		YawnsBlog.pm
-# Purpose:	Utility functions working with the Yawns weblogs database table
-# Created:	2005-10-12
-#
-# ===========================================================================
-# (c) 2005 Steve Kemp <steve@steve.org.uk>
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of version 2 of the GNU General Public License as
-# published by the Free Software Foundation.  See the file COPYING for
-# further details.
-# ===========================================================================
-#
-# $Id: YawnsBlog.pm,v 1.18 2007-02-06 17:08:13 steve Exp $
+=head1 NAME
+
+YawnsBlog - A module for working with blog entries on a Yawns Site.
+
+=head1 SYNOPSIS
+
+=for example begin
+
+    #!/usr/bin/perl -w
+
+    use strict;
+    use YawnsBlog;
+
+    # Get all tags used upon this site.
+    my $holder   = Yawns::Tags->new();
+    my $all_tags = $holder->getAllTags();
+
+=for example end
 
 
-#
-#  Make this a 'real module'.
-#
+=head1 DESCRIPTION
+
+This module contains some code for working with Yawns Blog Entries,
+the code is unique to the Yawns Planet, unlike the code which is
+contains in the Yawns project itself.
+
+=cut
+
+
 package YawnsBlog;
 require Exporter;
 @ISA    = qw ( Exporter );
@@ -37,10 +46,16 @@ use conf::SiteConfig;
 use Singleton::DBI;
 use HTML::Cleanup;
 
-#
-#  Return the most recent weblog entries the database.
-#
-#
+
+
+=begin doc
+
+  Return the most recent weblog entries from the database.
+
+=end doc
+
+=cut
+
 sub Entries
 {
     my ( $count ) = ( @_ );
@@ -234,10 +249,14 @@ sub Entries
 
 
 
-#
-#  Find the tags upon a particular entry.
-#
-#
+=begin doc
+
+  Find the tags upon a particular entry.
+
+=end doc
+
+=cut
+
 sub getTags
 {
     my( $user, $id ) =  (@_);
@@ -293,11 +312,16 @@ sub getTags
 
 
 
-#
-#  Return the list of subscribed users - we prefer to use their
-# real names, but if they are not available fall back to returning
-# only their account names.
-#
+=begin doc
+
+  Return the list of subscribed users - we prefer to use their
+ real names, but if they are not available fall back to returning
+ only their account names.
+
+=end doc
+
+=cut
+
 sub Posters
 {
     #
@@ -366,9 +390,14 @@ sub Posters
 
 
 
-#
-# Sort a list of subscriptions by their username, case-insensitive.
-#
+=begin doc
+
+  Sort a list of subscriptions by their username, case-insensitive.
+
+=end doc
+
+=cut
+
 sub sortByName()
 {
     return( lc($::a->{'fullname'}) cmp lc($::b->{'fullname'}) );
@@ -376,10 +405,15 @@ sub sortByName()
 
 
 
-#
-#  Perform a search against blog entries.  Optionally ignore the
-# comment field in the database - it might not be present.
-#
+=begin doc
+
+  Perform a search against blog entries.  Optionally ignore the
+ comment field in the database - it might not be present.
+
+=end doc
+
+=cut
+
 sub SearchEntries
 {
     my ( $terms ) = ( @_ );

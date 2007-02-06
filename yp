@@ -1,27 +1,79 @@
 #!/usr/bin/perl -w -I.
 
-# ===========================================================================
-# File:		yp
-# Purpose:	Generator for a Yawns-Planet website.
-# Created:	2005-10-12
-#
-# ===========================================================================
-# (c) 2005 Steve Kemp <steve@steve.org.uk>
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of version 2 of the GNU General Public License as
-# published by the Free Software Foundation.  See the file COPYING for
-# further details.
-# ===========================================================================
-#
-# $Id: yp,v 1.27 2007-02-06 17:08:14 steve Exp $
+=head1 NAME
 
-# Enforce good programming practices
+yp - Create Yawns-Planet.
+
+=head1 SYNOPSIS
+
+  yp [options]
+
+  General Options:
+
+  Help Options:
+   --help     Show this scripts help information.
+   --manual   Read this scripts manual.
+   --verbose  show sending progress.
+   --version  Show the version number and exit.
+
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--help>
+Show the scripts help information.
+
+=item B<--manual>
+Read the manual.
+
+=item B<--verbose>
+Show sending progress.
+
+=item B<--version>
+Show the version number and exit.
+
+=back
+
+
+=head1 DESCRIPTION
+
+  yp is a simple script which is designed to create a Yawns-Planet
+ site.
+
+  This is a PlanetPlanet like static listing of weblog entries
+ posted by uesrs of a Yawns powered site.
+
+=cut
+
+=head1 TODO
+
+  The SQL queries should use bound parameters.
+
+=cut
+
+
+=head1 AUTHOR
+
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+ $Id: yp,v 1.28 2007-02-06 18:10:51 steve Exp $
+
+=cut
+
+
 use strict;
+use warnings;
 
 # Modules we use.
 use Date::Manip qw(ParseDate UnixDate);
+use Getopt::Long;
 use HTML::Entities;
 use HTML::Template;
+use Pod::Usage;
 use POSIX qw/ strftime /;
 
 
@@ -30,14 +82,25 @@ use conf::SiteConfig;
 use YawnsBlog;
 
 
+#
+#  Options.
+#
+my %CONFIG;
+$CONFIG{'verbose'} = 0;
+$CONFIG{'version'} = '$Id: yp,v 1.28 2007-02-06 18:10:51 steve Exp $';
+
 
 #
-# Read-only variables: version number from CVS.
+# Fix up the version
 #
-my $REVISION  = '$Id: yp,v 1.27 2007-02-06 17:08:14 steve Exp $';
-my $VERSION   = "";
-$VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
-$VERSION      =~ s/yp,v\b//;
+$CONFIG{'version'} = join (' ', (split (' ', $CONFIG{'version'}))[2..2]);
+$CONFIG{'version'} =~ s/yp,v\b//;
+
+
+#
+#  Parse our command line arguments
+#
+parseCommandLineArguments();
 
 
 #
@@ -50,19 +113,29 @@ testTemplateDirectory( $TEMPLATES );
 
 #  1. Get weblog entries.
 #
+$CONFIG{'verbose'} && print "Finding weblog entries\n";
 my @entries = YawnsBlog::Entries( get_conf( "count" ) );
+$CONFIG{'verbose'} && print "Done...\n";
+
 
 #
 #  2. Create output HTML
 #
+$CONFIG{'verbose'} && print "Creating HTML index\n";
 writeHTMLIndex( @entries );
+$CONFIG{'verbose'} && print "Done...\n";
 
 
 #
 #  3. Create output XML feeds.
 #
+$CONFIG{'verbose'} && print "Creating RSS 1.0 feed\n";
 writeRSS10( @entries );
+$CONFIG{'verbose'} && print "Done...\n";
+
+$CONFIG{'verbose'} && print "Creating RSS 2.0 feed\n";
 writeRSS20( @entries );
+$CONFIG{'verbose'} && print "Done...\n";
 
 
 #
@@ -72,10 +145,15 @@ exit;
 
 
 
-#
-#  Ensure the given templates directory exists, and that it
-# contains the templates that we will expect to load from it.
-#
+=begin doc
+
+  Ensure the given templates directory exists, and that it
+ contains the templates that we will expect to load from it.
+
+=end doc
+
+=cut
+
 sub testTemplateDirectory
 {
     my ( $directory ) = ( @_ );
@@ -110,9 +188,14 @@ E_O_ERROR
 
 
 
-#
-#  Write the output index.html file
-#
+=begin doc
+
+  Write the output index.html file
+
+=end doc
+
+=cut
+
 sub writeHTMLIndex
 {
     my ( @entries ) = ( @_ );
@@ -137,7 +220,7 @@ sub writeHTMLIndex
     $template->param( 'title',      get_conf( 'title' ) );
     $template->param( 'title_link', get_conf( 'title_link' ) );
     $template->param( 'updated' ,   $time );
-    $template->param( 'version' ,   $VERSION );
+    $template->param( 'version' ,   $CONFIG{'version'} );
 
 
     #
@@ -153,14 +236,19 @@ sub writeHTMLIndex
 
 
 
-#
-#  Write out an RSS v1.0 formatted XML file from the weblog
-# entries.
-#
-#  We do this cleanly setting each template loop's value
-# correctly - taking care to modify the date to the appropriate
-# format.
-#
+=begin doc
+
+  Write out an RSS v1.0 formatted XML file from the weblog
+ entries.
+
+  We do this cleanly setting each template loop's value
+ correctly - taking care to modify the date to the appropriate
+ format.
+
+=end doc
+
+=cut
+
 sub writeRSS10
 {
     my ( $weblogs ) = ( @_ );
@@ -240,14 +328,19 @@ sub writeRSS10
 
 
 
-#
-#  Write out an RSS v2.0 formatted XML file from the weblog
-# entries.
-#
-#  We do this cleanly setting each template loop's value
-# correctly - taking care to modify the date to the appropriate
-# format.
-#
+=begin doc
+
+  Write out an RSS v2.0 formatted XML file from the weblog
+ entries.
+
+  We do this cleanly setting each template loop's value
+ correctly - taking care to modify the date to the appropriate
+ format.
+
+=end doc
+
+=cut
+
 sub writeRSS20
 {
     my ( $weblogs ) = ( @_ );
@@ -316,4 +409,42 @@ sub writeRSS20
 	or die "Cannot open output file '$output' - $!@";
     print OUTPUT $template->output();
     close( OUTPUT );
+}
+
+
+
+
+=begin doc
+
+  Parse the arguments specified upon the command line.
+
+=end doc
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $SHOW_HELP    = 0;
+    my $SHOW_MANUAL  = 0;
+    my $SHOW_VERSION = 0;
+
+    #
+    #  Parse the options we accept
+    #
+    GetOptions(
+               "file=s",     \$CONFIG{'file'},
+               "help",       \$SHOW_HELP,
+               "manual",     \$SHOW_MANUAL,
+               "verbose",    \$CONFIG{'verbose'},
+               "version",    \$SHOW_VERSION,
+             );
+
+    pod2usage(1)              if ( $SHOW_HELP   );
+    pod2usage(-verbose => 2 ) if ( $SHOW_MANUAL );
+
+    if ( $SHOW_VERSION )
+    {
+        print "$0 Revision: $CONFIG{'version'}\n";
+        exit;
+    }
 }
