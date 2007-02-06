@@ -17,7 +17,7 @@
    <li>There are no weblog entries indexed upon this host, yet.</li>
    <li>There is a bug in the search code.</li>
    </ul>
-   <p>If you feel you are seeing this error message inappropriately then please mail the <a href="http://www.debian-administration.org/users/Steve" rel="nofollow">webmaster</a> - or consider <a href="http://www.cvsrepository.org/cgi-bin/trac/yawns-planet/tktnew" rel="nofollow">reporting a bug</a> against the software which powers this planet site; <a href="http://yawns-planet.cvsrepository.org/">Yawns-Planet</a>.</p>
+   <p>If you feel you are seeing this error message inappropriately then please mail the <a href="<!-- tmpl_var name='user_prefix' -->Steve" rel="nofollow">webmaster</a> - or consider <a href="http://www.cvsrepository.org/cgi-bin/trac/yawns-planet/tktnew" rel="nofollow">reporting a bug</a> against the software which powers this planet site; <a href="http://yawns-planet.cvsrepository.org/">Yawns-Planet</a>.</p>
 
    <p><a href="<!-- tmpl_var name='link' -->">Go back to the planet</a>.</p>
 
@@ -35,11 +35,11 @@
    <h2><!-- tmpl_var name="date" --></h2>
   <!-- /tmpl_if -->
 
-   <h3><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="user" -->" title="Weblogs for <!-- tmpl_var name="user">" rel="nofollow"><!-- tmpl_var name="user" --></a>: <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"><!-- tmpl_var name="title" --></a></h3>
+   <h3><a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->" title="Weblogs for <!-- tmpl_var name="user">" rel="nofollow"><!-- tmpl_var name="user" --></a>: <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"><!-- tmpl_var name="title" --></a></h3>
 <div class="tags">
 Tags: <!-- tmpl_if name='tags' -->
 <!-- tmpl_loop name="tags" -->
-<a href="http://www.debian-administration.org/tag/<!-- tmpl_var name="tag" escape="html" -->" title="Find more articles with this tag" rel="tag"><!-- tmpl_var name="tag" --></a><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless -->
+<a href="<!-- tmpl_var name='tag_prefix' --><!-- tmpl_var name="tag" escape="html" -->" title="Find more articles with this tag" rel="tag"><!-- tmpl_var name="tag" --></a><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless -->
 <!-- /tmpl_loop -->
 <!-- tmpl_else -->
 <i>none</i>.
@@ -58,7 +58,7 @@ Tags: <!-- tmpl_if name='tags' -->
    <!-- tmpl_if name="no_comments" -->
     No comments.
    <!-- tmpl_else -->
-    <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"><!-- tmpl_var name="comments" --> comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>.
+    <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"><!-- tmpl_var name="comments" --> comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>.
    <!-- /tmpl_if -->
   <!-- /tmpl_if -->
   <!-- /tmpl_if -->
@@ -81,7 +81,7 @@ Tags: <!-- tmpl_if name='tags' -->
  <h2>Subscriptions</h2>
  <ul>
   <!-- tmpl_loop name="subscriptions" -->
-   <li><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="account" -->"  rel="nofollow"><!-- tmpl_var name="fullname" --></a></li>
+   <li><a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="account" -->"  rel="nofollow"><!-- tmpl_var name="fullname" --></a></li>
   <!-- /tmpl_loop -->
   </ul>
 

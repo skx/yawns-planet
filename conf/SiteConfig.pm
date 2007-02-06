@@ -71,6 +71,16 @@ sub get_conf
 
 
     #
+    # Link to place in front of /tag/foo
+    #
+    $tag_prefix = 'http://www.debian-administration.org/tag/';
+
+    #
+    # User prefix
+    #
+    $user_prefix = 'http://www.debian-administration.org/users/';
+
+    #
     # Link shown in the header of the planet.
     #
     $title_link = 'Planet <a href="http://www.debian-administration.org/">Debian Administration</a>';

@@ -23,12 +23,12 @@
    <h2><!-- tmpl_var name="date" --></h2>
   <!-- /tmpl_if -->
 
-  <h3><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="user" -->" title="<!-- tmpl_var name="user">"  rel="nofollow"><!-- tmpl_var name="user" --></a>: <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"> <!-- tmpl_var name="title" --></a></h3>
+  <h3><a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->" title="<!-- tmpl_var name="user">"  rel="nofollow"><!-- tmpl_var name="user" --></a>: <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"> <!-- tmpl_var name="title" --></a></h3>
 
 <div class="tags">
 Tags: <!-- tmpl_if name='tags' -->
 <!-- tmpl_loop name="tags" -->
-<a href="http://www.debian-administration.org/tag/<!-- tmpl_var name="tag" escape="html" -->" title="Find more articles with this tag" rel="tag"><!-- tmpl_var name="tag" --></a><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless -->
+<a href="<!-- tmpl_var name='tag_prefix' --><!-- tmpl_var name="tag" escape="html" -->" title="Find more articles with this tag" rel="tag"><!-- tmpl_var name="tag" --></a><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless -->
 <!-- /tmpl_loop -->
 <!-- tmpl_else -->
 <i>none</i>.
@@ -44,9 +44,9 @@ Tags: <!-- tmpl_if name='tags' -->
    Comments disabled
   <!-- tmpl_else -->
    <!-- tmpl_if name="no_comments" -->
-    No comments. <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow">Link</a>
+    No comments. <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow">Link</a>
    <!-- tmpl_else -->
-    <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"><!-- tmpl_var name="comments" --> comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>.
+    <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"><!-- tmpl_var name="comments" --> comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>.
    <!-- /tmpl_if -->
   <!-- /tmpl_if -->
    <!-- /tmpl_if -->
@@ -68,7 +68,7 @@ Tags: <!-- tmpl_if name='tags' -->
  <h2>Subscriptions</h2>
  <ul>
   <!-- tmpl_loop name="subscriptions" -->
-   <li><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="account" -->" rel="nofollow"><!-- tmpl_var name="fullname" --></a></li>
+   <li><a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="account" -->" rel="nofollow"><!-- tmpl_var name="fullname" --></a></li>
   <!-- /tmpl_loop -->
   </ul>
 

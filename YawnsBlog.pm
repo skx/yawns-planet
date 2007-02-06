@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.17 2007-02-06 12:05:06 steve Exp $
+# $Id: YawnsBlog.pm,v 1.18 2007-02-06 17:08:13 steve Exp $
 
 
 #
@@ -54,6 +54,11 @@ sub Entries
     # Do we support comments
     #
     my $has_comments = get_conf( "has_comments" );
+
+    #
+    #  Get the prefix
+    #
+    my $user_prefix = get_conf( "user_prefix" );
 
     #
     # Execute the query
@@ -199,6 +204,7 @@ sub Entries
 		   plural       => $plural,
 		   new_date     => $new_date,
                    tags         => $tags,
+                   user_prefix  => $user_prefix,
 	       } );
         }
         else
@@ -217,6 +223,7 @@ sub Entries
 		   disabled     => $comments_disabled,
 		   plural       => $plural,
 		   new_date     => $new_date,
+                   user_prefix  => $user_prefix,
 	       } );
 
         }
@@ -248,6 +255,11 @@ sub getTags
     my $gid = $query->fetchrow_array();
     $query->finish();
 
+    #
+    # Tag prefix.
+    #
+    my $tag_prefix   = get_conf( "tag_prefix" );
+
 
     #
     #  Tags we'll find
@@ -269,7 +281,8 @@ sub getTags
     while( $sql->fetch() )
     {
 	push ( @$tags, {
-			tag	=> $tag,
+			tag        => $tag,
+                        tag_prefix => $tag_prefix,
 		       }
 	     );
     }
@@ -277,6 +290,7 @@ sub getTags
 
     return( $tags );
 }
+
 
 
 #
@@ -290,6 +304,11 @@ sub Posters
     # Connect to the database.
     #
     my ( $dbh ) = Singleton::DBI->instance();
+
+    #
+    #  Get the prefix
+    #
+    my $user_prefix = get_conf( "user_prefix" );
 
     #
     # Find the posters.
@@ -330,11 +349,10 @@ sub Posters
 
 	$real_name = encode_entities( $real_name );
 	push ( @$subscriptions,
-	       {
-		   account => $user_name,
-		   fullname => $real_name
-		   });
-
+               {  account     => $user_name,
+                  fullname    => $real_name,
+                  user_prefix => $user_prefix,
+               });
     }
 
 
@@ -381,6 +399,11 @@ sub SearchEntries
     # Do we support comments
     #
     my $has_comments = get_conf( "has_comments" );
+
+    #
+    #  Get the prefix
+    #
+    my $user_prefix = get_conf( "user_prefix" );
 
     #
     # Query string we execute.
@@ -507,7 +530,8 @@ sub SearchEntries
 			       disabled    => $comments_disabled,
 			       plural      => $plural,
 			       new_date    => $new_date,
-                               tags        => $tags
+                               tags        => $tags,
+                               user_prefix => $user_prefix
 				  } );
         }
         else
@@ -524,7 +548,8 @@ sub SearchEntries
 			       no_comments => $no_comments,
 			       disabled    => $comments_disabled,
 			       plural      => $plural,
-			       new_date    => $new_date
+			       new_date    => $new_date,
+                               user_prefix => $user_prefix,
 				  } );
         }
     }
