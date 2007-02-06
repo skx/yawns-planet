@@ -36,6 +36,16 @@
   <!-- /tmpl_if -->
 
    <h3><a href="http://www.debian-administration.org/users/<!-- tmpl_var name="user" -->" title="Weblogs for <!-- tmpl_var name="user">" rel="nofollow"><!-- tmpl_var name="user" --></a>: <a href="http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"><!-- tmpl_var name="title" --></a></h3>
+<div class="tags">
+Tags: <!-- tmpl_if name='tags' -->
+<!-- tmpl_loop name="tags" -->
+<a href="http://www.debian-administration.org/tag/<!-- tmpl_var name="tag" escape="html" -->" title="Find more articles with this tag" rel="tag"><!-- tmpl_var name="tag" --></a><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless -->
+<!-- /tmpl_loop -->
+<!-- tmpl_else -->
+<i>none</i>.
+<!-- /tmpl_if -->
+</div>
+
   <div class="entry">
    <!-- tmpl_var name="body" -->
   </div>

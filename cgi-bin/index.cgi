@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: index.cgi,v 1.14 2005-10-19 00:37:55 steve Exp $
+# $Id: index.cgi,v 1.15 2007-02-06 12:05:06 steve Exp $
 
 # Enforce good programming practices
 use strict;
@@ -31,7 +31,7 @@ use YawnsBlog;
 #
 # Read-only variables: version number from CVS.
 #
-my $REVISION  = '$Id: index.cgi,v 1.14 2005-10-19 00:37:55 steve Exp $';
+my $REVISION  = '$Id: index.cgi,v 1.15 2007-02-06 12:05:06 steve Exp $';
 my $VERSION   = "";
 $VERSION      = join (' ', (split (' ', $REVISION))[2..2]);
 $VERSION      =~ s/yp,v\b//;
@@ -111,7 +111,8 @@ sub showResults
     #
     # Load the template
     #
-    my $template = HTML::Template->new( filename => $TEMPLATE . "results.tmpl" );
+    my $template = HTML::Template->new( filename => $TEMPLATE . "results.tmpl" ,
+                                      loop_context_vars => 1);
 
     #
     # Fill in the parameters.

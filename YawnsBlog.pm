@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.16 2007-02-06 11:55:35 steve Exp $
+# $Id: YawnsBlog.pm,v 1.17 2007-02-06 12:05:06 steve Exp $
 
 
 #
@@ -489,7 +489,30 @@ sub SearchEntries
 	}
 	$prevDate = $date;
 
-	push ( @$resultsloop, {
+        my $tags = getTags( $result[1], $result[0] );
+
+        if ( $tags )
+        {
+
+            push ( @$resultsloop, {
+			       id          => $result[0],
+			       user        => $result[1],
+			       title       => $result[2],
+			       date        => $result[3],
+			       time        => $result[4],
+			       body        => $result[5],
+			       comments    => $comments,
+			       has_comments => $has_comments,
+			       no_comments => $no_comments,
+			       disabled    => $comments_disabled,
+			       plural      => $plural,
+			       new_date    => $new_date,
+                               tags        => $tags
+				  } );
+        }
+        else
+        {
+            push ( @$resultsloop, {
 			       id          => $result[0],
 			       user        => $result[1],
 			       title       => $result[2],
@@ -503,6 +526,7 @@ sub SearchEntries
 			       plural      => $plural,
 			       new_date    => $new_date
 				  } );
+        }
     }
 
     return ( $rcount, $resultsloop );
