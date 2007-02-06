@@ -60,7 +60,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: yp,v 1.28 2007-02-06 18:10:51 steve Exp $
+ $Id: yp,v 1.29 2007-02-06 18:15:26 steve Exp $
 
 =cut
 
@@ -87,7 +87,7 @@ use YawnsBlog;
 #
 my %CONFIG;
 $CONFIG{'verbose'} = 0;
-$CONFIG{'version'} = '$Id: yp,v 1.28 2007-02-06 18:10:51 steve Exp $';
+$CONFIG{'version'} = '$Id: yp,v 1.29 2007-02-06 18:15:26 steve Exp $';
 
 
 #
@@ -256,6 +256,14 @@ sub writeRSS10
     my $contents;
     my $entries;
 
+
+    #
+    #  get configuration values.
+    #
+    my $site_link  = get_conf( 'link' );
+    my $site_title = get_conf( 'title' );
+
+
     #
     # Read in each available blog entry.  We don't care about
     # much of the date just:
@@ -315,6 +323,8 @@ sub writeRSS10
     #
     $template->param( "contents", $contents );
     $template->param( "blogentries", $entries );
+    $template->param( site_link  => $site_link,
+                      site_title => $site_title );
 
     #
     # Open the output file, and write the data.
@@ -344,6 +354,12 @@ sub writeRSS10
 sub writeRSS20
 {
     my ( $weblogs ) = ( @_ );
+
+    #
+    #  get configuration values.
+    #
+    my $site_link  = get_conf( 'link' );
+    my $site_title = get_conf( 'title' );
 
     my $entries;
 
@@ -400,7 +416,8 @@ sub writeRSS20
     #  Setup the entries.
     #
     $template->param( "entries", $entries );
-
+    $template->param( site_link  => $site_link,
+                      site_title => $site_title );
     #
     # Open the output file, and write the data.
     #
