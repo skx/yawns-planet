@@ -13,7 +13,7 @@
 # further details.
 # ===========================================================================
 #
-# $Id: YawnsBlog.pm,v 1.15 2007-02-02 03:55:52 steve Exp $
+# $Id: YawnsBlog.pm,v 1.16 2007-02-06 11:55:35 steve Exp $
 
 
 #
@@ -180,7 +180,30 @@ sub Entries
             }
 	}
 
-	push ( @$weblogs,
+        my $tags = getTags( $entry[1], $entry[0] );
+
+        if ( $tags )
+        {
+            push ( @$weblogs,
+	       {
+		   id           => $entry[0],
+		   user         => $entry[1],
+		   title        => $entry[2],
+		   body         => $body,
+		   date         => $date,
+		   time         => $time,
+		   comments     => $comments,
+	           has_comments => $has_comments,
+		   no_comments  => $no_comments,
+		   disabled     => $comments_disabled,
+		   plural       => $plural,
+		   new_date     => $new_date,
+                   tags         => $tags,
+	       } );
+        }
+        else
+        {
+            push ( @$weblogs,
 	       {
 		   id           => $entry[0],
 		   user         => $entry[1],
@@ -195,11 +218,65 @@ sub Entries
 		   plural       => $plural,
 		   new_date     => $new_date,
 	       } );
+
+        }
     }
 
     return( $weblogs );
 }
 
+
+
+#
+#  Find the tags upon a particular entry.
+#
+#
+sub getTags
+{
+    my( $user, $id ) =  (@_);
+
+    #
+    # Get the database handle.
+    #
+    my $dbh    = Singleton::DBI->instance();
+
+    #
+    #  Find the weblog GID.
+    #
+    my $query = $dbh->prepare( 'SELECT gid FROM weblogs WHERE id=? AND username=?' );
+    $query->execute( $id, $user ) or die "Failed to run query " . $db->errstr();
+    my $gid = $query->fetchrow_array();
+    $query->finish();
+
+
+    #
+    #  Tags we'll find
+    #
+    my $tags;
+
+
+    #
+    # Find the posters.
+    #
+    my $sql    = $dbh->prepare( "SELECT DISTINCT(tag) FROM tags WHERE root=? AND TYPE=? ORDER BY tag " );
+    $sql->execute( $gid, 'w' );
+    #
+    # Bind the columns.
+    #
+    my ( $tag );
+    $sql->bind_columns( undef, \$tag );
+
+    while( $sql->fetch() )
+    {
+	push ( @$tags, {
+			tag	=> $tag,
+		       }
+	     );
+    }
+    $sql->finish();
+
+    return( $tags );
+}
 
 
 #
