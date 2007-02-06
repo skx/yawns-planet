@@ -66,6 +66,9 @@ img.face {
 	margin-top: -3em;
 }
 
+.tags {
+        text-align: right;
+}
 .entry {
 	margin-bottom: 2em;
 }
