@@ -23,7 +23,7 @@
    <h2><!-- tmpl_var name="date" --></h2>
   <!-- /tmpl_if -->
 
-  <h3><a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->" title="<!-- tmpl_var name="user">"  rel="nofollow"><!-- tmpl_var name="user" --></a>: <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->#comments" rel="nofollow"> <!-- tmpl_var name="title" --></a></h3>
+  <h3><a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->" title="<!-- tmpl_var name="user">"  rel="nofollow"><!-- tmpl_var name="user" --></a>: <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"> <!-- tmpl_var name="title" --></a></h3>
 
 <div class="tags">
 <!-- tmpl_if name='tags' -->
@@ -47,7 +47,7 @@ Tags:
    <!-- tmpl_if name="no_comments" -->
     No comments. <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow">Link</a>
    <!-- tmpl_else -->
-    <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->" rel="nofollow"><!-- tmpl_var name="comments" --> comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>.
+    <a href="<!-- tmpl_var name='user_prefix' --><!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="id" -->#comments" rel="nofollow"><!-- tmpl_var name="comments" --> comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>.
    <!-- /tmpl_if -->
   <!-- /tmpl_if -->
    <!-- /tmpl_if -->
