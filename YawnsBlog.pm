@@ -165,7 +165,8 @@ sub Entries
 	#
 	my $cut      = 0;
         my $cut_text = "";
-	if ( $body =~ /(.*)<cut([^>]*)>(.*)/gis )
+	if ( ( $body =~ /(.*)<cut([^>]*)>(.*)/gis ) ||
+             ( $body =~ /(.*)&lt;cut([a-zA-Z0-9 \t'"]*)&gt;(.*)/gis ) )
 	{
 	    $body = $1;
 	    $cut  = 1;
