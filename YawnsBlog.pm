@@ -338,7 +338,7 @@ sub Posters
     #
     # Find the posters.
     #
-    my $query = "SELECT DISTINCT a.realname,a.username FROM users AS a INNER JOIN weblogs AS b ON a.username = b.username";
+    my $query = "SELECT DISTINCT a.realname,a.username FROM users AS a INNER JOIN weblogs AS b ON a.username = b.username AND a.suspended = 0";
 
     my $sql = $dbh->prepare( $query );
     $sql->execute();
