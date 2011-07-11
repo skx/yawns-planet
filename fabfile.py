@@ -69,10 +69,10 @@ def deploy():
     run( "cd ~/current && make planet" )
 
     #
-    # Refresh apache2 now that ~/current has changed to point to
+    # Restart the HTTP server now that ~/current has changed to point to
     # a new directory.
     # 
-    run( "sudo /etc/init.d/apache2 restart" )
+    run( "sudo /etc/init.d/nginx restart" )
 
 
 def _prepare_remote( id ):
