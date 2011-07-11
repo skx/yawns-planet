@@ -1,3 +1,3 @@
-(^|/)CVS($|/)
-(^|/)\.hg($|/)
-(^|/)\.hgtags($|/)
+syntax: glob
+
+fabric.pyc
