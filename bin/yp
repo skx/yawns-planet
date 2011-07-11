@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I.
+#!/usr/bin/perl -w -I../lib/ -I./lib/
 
 =head1 NAME
 
