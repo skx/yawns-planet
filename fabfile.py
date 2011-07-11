@@ -72,7 +72,7 @@ def deploy():
     # Refresh apache2 now that ~/current has changed to point to
     # a new directory.
     # 
-    run( "sudo /etc/init.d/apache2 reload" )
+    run( "sudo /etc/init.d/apache2 restart" )
 
 
 def _prepare_remote( id ):
