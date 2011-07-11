@@ -44,19 +44,19 @@ sub get_conf
     #
     # The output location for the HTML page.
     #
-    $htmlOutput = "html/index.html";
+    $htmlOutput = "htdocs/index.html";
 
 
     #
     # The output location for the RSS v1.0
     #
-    $rss1Output = "html/rss10.xml";
+    $rss1Output = "htdocs/rss10.xml";
 
 
     #
     # The output location for the RSS v2.0 feed.
     #
-    $rss2Output = "html/rss20.xml";
+    $rss2Output = "htdocs/rss20.xml";
 
 
     #
