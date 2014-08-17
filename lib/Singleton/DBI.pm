@@ -21,7 +21,7 @@ use conf::SiteConfig;
 #
 #  The DBI modules for accessing the database.
 #
-use DBI qw/ :sql_types / ;
+use DBI qw/ :sql_types /;
 
 
 
@@ -39,27 +39,28 @@ sub instance
 {
     $_dbh ||= (shift)->new();
 
-    return( $_dbh );
+    return ($_dbh);
 }
 
 sub new
 {
+
     #
     # get necessary config info
     #
-    my $dbuser = conf::SiteConfig::get_conf ( 'dbuser' );
-    my $dbpass = conf::SiteConfig::get_conf ( 'dbpass' );
-    my $dbname = conf::SiteConfig::get_conf ( 'dbname' );
-    my $dbserv = conf::SiteConfig::get_conf ( 'dbserv' );
+    my $dbuser = conf::SiteConfig::get_conf('dbuser');
+    my $dbpass = conf::SiteConfig::get_conf('dbpass');
+    my $dbname = conf::SiteConfig::get_conf('dbname');
+    my $dbserv = conf::SiteConfig::get_conf('dbserv');
 
     # Build up DBI connection string.
-    my $datasource = 'dbi:mysql:'.$dbname;
-    $datasource .= "\;host=$dbserv" if ( $dbserv );
+    my $datasource = 'dbi:mysql:' . $dbname;
+    $datasource .= "\;host=$dbserv" if ($dbserv);
 
-    my $t =  DBI->connect_cached( $datasource, $dbuser, $dbpass )
-	or die DBI->errstr();
+    my $t = DBI->connect_cached( $datasource, $dbuser, $dbpass ) or
+      die DBI->errstr();
 
-    return( $t );
+    return ($t);
 }
 
 

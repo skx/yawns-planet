@@ -68,46 +68,47 @@ $VERSION = '0.08';
 
 # my my my my, these here to prevent foolishness like
 # http://perlmonks.org/index.pl?node_id=251127#Stealing+Lexicals
-(@_scrub    )= ( \&_scrub, "self, event, tagname, attr, attrseq, text");
-(@_scrub_fh )= ( \&_scrub_fh, "self, event, tagname, attr, attrseq, text");
+(@_scrub)    = ( \&_scrub,    "self, event, tagname, attr, attrseq, text" );
+(@_scrub_fh) = ( \&_scrub_fh, "self, event, tagname, attr, attrseq, text" );
 
-sub new {
+sub new
+{
     my $package = shift;
-    my $p = HTML::Parser->new(
-        api_version     => 3,
-        default_h       => \@_scrub,
-        marked_sections => 0,
-        strict_comment  => 0,
-        unbroken_text   => 1,
-        case_sensitive  => 0,
-        boolean_attribute_value => undef,
-    );
+    my $p = HTML::Parser->new( api_version             => 3,
+                               default_h               => \@_scrub,
+                               marked_sections         => 0,
+                               strict_comment          => 0,
+                               unbroken_text           => 1,
+                               case_sensitive          => 0,
+                               boolean_attribute_value => undef,
+                             );
 
-    my $self = {
-        _p => $p,
-        _rules => {
-            '*' => 0,
-        },
-        _comment => 0,
-        _process => 0,
-        _r => "",
-        _optimize => 1,
-        _script => 0,
-        _style  => 0,
-    };
+    my $self = { _p        => $p,
+                 _rules    => { '*' => 0, },
+                 _comment  => 0,
+                 _process  => 0,
+                 _r        => "",
+                 _optimize => 1,
+                 _script   => 0,
+                 _style    => 0,
+               };
 
-    $p->{"\0_s"} = bless $self, $package;
+    $p->{ "\0_s" } = bless $self, $package;
 
     return $self unless @_;
 
-    my(%args)= @_;
+    my (%args) = @_;
 
-    for my $f( qw[ default allow deny rules process comment ] ) {
-        next unless exists $args{$f};
-        if( ref $args{$f} ) {
-            $self->$f( @{ $args{$f} } ) ;
-        } else {
-            $self->$f( $args{$f} ) ;
+    for my $f (qw[ default allow deny rules process comment ])
+    {
+        next unless exists $args{ $f };
+        if ( ref $args{ $f } )
+        {
+            $self->$f( @{ $args{ $f } } );
+        }
+        else
+        {
+            $self->$f( $args{ $f } );
         }
     }
 
@@ -121,11 +122,11 @@ sub new {
 
 =cut
 
-sub comment {
-    return
-        $_[0]->{_comment}
-            if @_ == 1;
-    $_[0]->{_comment} = $_[1];
+sub comment
+{
+    return $_[0]->{ _comment }
+      if @_ == 1;
+    $_[0]->{ _comment } = $_[1];
     return;
 }
 
@@ -137,11 +138,11 @@ sub comment {
 =cut
 
 
-sub process {
-    return
-        $_[0]->{_process}
-            if @_ == 1;
-    $_[0]->{_process} = $_[1];
+sub process
+{
+    return $_[0]->{ _process }
+      if @_ == 1;
+    $_[0]->{ _process } = $_[1];
     return;
 }
 
@@ -159,11 +160,11 @@ all script tags encountered will be validated like all other tags.
 
 =cut
 
-sub script {
-    return
-        $_[0]->{_script}
-            if @_ == 1;
-    $_[0]->{_script} = $_[1];
+sub script
+{
+    return $_[0]->{ _script }
+      if @_ == 1;
+    $_[0]->{ _script } = $_[1];
     return;
 }
 
@@ -180,11 +181,11 @@ all style tags encountered will be validated like all other tags.
 
 =cut
 
-sub style {
-    return
-        $_[0]->{_style}
-            if @_ == 1;
-    $_[0]->{_style} = $_[1];
+sub style
+{
+    return $_[0]->{ _style }
+      if @_ == 1;
+    $_[0]->{ _style } = $_[1];
     return;
 }
 
@@ -194,12 +195,14 @@ sub style {
 
 =cut
 
-sub allow {
+sub allow
+{
     my $self = shift;
-    for my $k(@_){
-        $self->{_rules}{lc $k}=1;
+    for my $k (@_)
+    {
+        $self->{ _rules }{ lc $k } = 1;
     }
-    $self->{_optimize} = 1; # each time a rule changes, reoptimize when parse
+    $self->{ _optimize } = 1;  # each time a rule changes, reoptimize when parse
 
     return;
 }
@@ -211,14 +214,16 @@ sub allow {
 
 =cut
 
-sub deny {
+sub deny
+{
     my $self = shift;
 
-    for my $k(@_){
-        $self->{_rules}{lc $k} = 0;
+    for my $k (@_)
+    {
+        $self->{ _rules }{ lc $k } = 0;
     }
 
-    $self->{_optimize} = 1; # each time a rule changes, reoptimize when parse
+    $self->{ _optimize } = 1;  # each time a rule changes, reoptimize when parse
 
     return;
 }
@@ -237,14 +242,16 @@ sub deny {
 
 =cut
 
-sub rules{
+sub rules
+{
     my $self = shift;
-    my(%rules)= @_;
-    for my $k(keys %rules) {
-        $self->{_rules}{lc $k} = $rules{$k};
+    my (%rules) = @_;
+    for my $k ( keys %rules )
+    {
+        $self->{ _rules }{ lc $k } = $rules{ $k };
     }
 
-    $self->{_optimize} = 1; # each time a rule changes, reoptimize when parse
+    $self->{ _optimize } = 1;  # each time a rule changes, reoptimize when parse
 
     return;
 }
@@ -262,14 +269,14 @@ sub rules{
 
 =cut
 
-sub default {
-    return
-        $_[0]->{_rules}{'*'}
-            if @_ == 1;
+sub default
+{
+    return $_[0]->{ _rules }{ '*' }
+      if @_ == 1;
 
-    $_[0]->{_rules}{'*'} = $_[1] if defined $_[1];
-    $_[0]->{_rules}{'_'} = $_[2] if defined $_[2] and ref $_[2];
-    $_[0]->{_optimize} = 1; # each time a rule changes, reoptimize when parse
+    $_[0]->{ _rules }{ '*' } = $_[1] if defined $_[1];
+    $_[0]->{ _rules }{ '_' } = $_[2] if defined $_[2] and ref $_[2];
+    $_[0]->{ _optimize } = 1;  # each time a rule changes, reoptimize when parse
 
     return;
 }
@@ -285,19 +292,23 @@ sub default {
 
 =cut
 
-sub scrub_file {
-    if(@_ > 2){
-        return unless defined $_[0]->_out($_[2]);
-    } else {
-        $_[0]->{_p}->handler( default => @_scrub );
+sub scrub_file
+{
+    if ( @_ > 2 )
+    {
+        return unless defined $_[0]->_out( $_[2] );
+    }
+    else
+    {
+        $_[0]->{ _p }->handler( default => @_scrub );
     }
 
-    $_[0]->_optimize() ;#if $_[0]->{_optimize};
+    $_[0]->_optimize();    #if $_[0]->{_optimize};
 
-    $_[0]->{_p}->parse_file($_[1]);
+    $_[0]->{ _p }->parse_file( $_[1] );
 
-    return delete $_[0]->{_r} unless exists $_[0]->{_out};
-    delete $_[0]->{_out};
+    return delete $_[0]->{ _r } unless exists $_[0]->{ _out };
+    delete $_[0]->{ _out };
     return 1;
 }
 
@@ -312,20 +323,24 @@ sub scrub_file {
 
 =cut
 
-sub scrub {
-    if(@_ > 2){
-        return unless defined $_[0]->_out($_[2]);
-    } else {
-        $_[0]->{_p}->handler( default => @_scrub );
+sub scrub
+{
+    if ( @_ > 2 )
+    {
+        return unless defined $_[0]->_out( $_[2] );
+    }
+    else
+    {
+        $_[0]->{ _p }->handler( default => @_scrub );
     }
 
-    $_[0]->_optimize();# if $_[0]->{_optimize};
+    $_[0]->_optimize();    # if $_[0]->{_optimize};
 
-    $_[0]->{_p}->parse($_[1]);
-    $_[0]->{_p}->eof();
+    $_[0]->{ _p }->parse( $_[1] );
+    $_[0]->{ _p }->eof();
 
-    return delete $_[0]->{_r} unless exists $_[0]->{_out};
-    delete $_[0]->{_out};
+    return delete $_[0]->{ _r } unless exists $_[0]->{ _out };
+    delete $_[0]->{ _out };
     return 1;
 }
 
@@ -336,19 +351,23 @@ sub scrub {
 
 =cut
 
-sub _out {
-    my($self, $o ) = @_;
+sub _out
+{
+    my ( $self, $o ) = @_;
 
-    unless( ref $o and ref \$o ne 'GLOB') {
+    unless ( ref $o and ref \$o ne 'GLOB' )
+    {
         local *F;
         open F, ">$o" or return undef;
         binmode F;
-        $self->{_out} = *F;
-    } else {
-        $self->{_out} = $o;
+        $self->{ _out } = *F;
+    }
+    else
+    {
+        $self->{ _out } = $o;
     }
 
-    $self->{_p}->handler( default => @_scrub_fh );
+    $self->{ _p }->handler( default => @_scrub_fh );
 
     return 1;
 }
@@ -360,36 +379,41 @@ Takes tag, rule('_' || $tag), attrref.
 
 =cut
 
-sub _validate {
-    my($s, $t, $r, $a, $as) = @_;
+sub _validate
+{
+    my ( $s, $t, $r, $a, $as ) = @_;
     return "<$t>" unless %$a;
 
-    $r = $s->{_rules}->{$r};
+    $r = $s->{ _rules }->{ $r };
     my %f;
 
-    for my $k( keys %$a ) {
-        if( exists $r->{$k} ) {
-            if( ref $r->{$k} || length($r->{$k}) > 1 ) {
-                $f{$k} = $a->{$k} if $a->{$k} =~ m{$r->{$k}};
-            } elsif( $r->{$k} ) {
-                $f{$k} = $a->{$k};
+    for my $k ( keys %$a )
+    {
+        if ( exists $r->{ $k } )
+        {
+            if ( ref $r->{ $k } || length( $r->{ $k } ) > 1 )
+            {
+                $f{ $k } = $a->{ $k } if $a->{ $k } =~ m{$r->{$k}};
             }
-        } elsif( exists $r->{'*'} and $r->{'*'} ) {
-            $f{$k} = $a->{$k};
+            elsif ( $r->{ $k } )
+            {
+                $f{ $k } = $a->{ $k };
+            }
+        }
+        elsif ( exists $r->{ '*' } and $r->{ '*' } )
+        {
+            $f{ $k } = $a->{ $k };
         }
     }
 
-    if( %f ){
+    if (%f)
+    {
         my %seen;
         return "<$t $r>"
-            if $r = join ' ',
-                    map {
-                        defined $f{$_}
-                        ? qq[$_="].encode_entities($f{$_}).q["]
-                        : $_; # boolean attribute (TODO?)
-                    } grep {
-                        exists $f{$_} and !$seen{$_}++;
-                    } @$as;
+          if $r = join ' ', map {
+            defined $f{ $_ } ? qq[$_="] . encode_entities( $f{ $_ } ) . q["] :
+                               $_;    # boolean attribute (TODO?)
+          } grep {exists $f{ $_ } and !$seen{ $_ }++;} @$as;
     }
 
     return "<$t>";
@@ -400,72 +424,61 @@ I<default> handler, does the scrubbing if we're scrubbing out to a file.
 
 =cut
 
-sub _scrub_fh {
-    my( $p, $e, $t, $a, $as, $text ) = @_;
-    my $s = $p->{"\0_s"} ;
+sub _scrub_fh
+{
+    my ( $p, $e, $t, $a, $as, $text ) = @_;
+    my $s = $p->{ "\0_s" };
 
     if ( $e eq 'start' )
     {
-        if( exists $s->{_rules}->{$t} )  # is there a specific rule
+        if ( exists $s->{ _rules }->{ $t } )    # is there a specific rule
         {
-            if( ref $s->{_rules}->{$t} ) # is it complicated?(not simple;)
+            if ( ref $s->{ _rules }->{ $t } )  # is it complicated?(not simple;)
             {
-                print
-                    {$s->{_out}}
-                        $s->_validate($t, $t, $a, $as);
+                print { $s->{ _out } } $s->_validate( $t, $t, $a, $as );
             }
-            elsif( $s->{_rules}->{$t} ) # validate using default attribute rule
+            elsif (
+                $s->{ _rules }->{ $t } ) # validate using default attribute rule
             {
-                print
-                    {$s->{_out}}
-                        $s->_validate($t, '_', $a, $as);
+                print { $s->{ _out } } $s->_validate( $t, '_', $a, $as );
             }
         }
-        elsif( $s->{_rules}->{'*'} ) # default allow tags
+        elsif ( $s->{ _rules }->{ '*' } )    # default allow tags
         {
-            print
-                {$s->{_out}}
-                    $s->_validate($t, '_', $a, $as);
+            print { $s->{ _out } } $s->_validate( $t, '_', $a, $as );
         }
     }
     elsif ( $e eq 'end' )
     {
-        if( exists $s->{_rules}->{$t} )
+        if ( exists $s->{ _rules }->{ $t } )
         {
-            print
-                {$s->{_out}}
-                    "</$t>"
-                        if $s->{_rules}->{$t};
+            print { $s->{ _out } } "</$t>"
+              if $s->{ _rules }->{ $t };
 
         }
-        elsif( $s->{_rules}->{'*'} )
+        elsif ( $s->{ _rules }->{ '*' } )
         {
 
-            print {$s->{_out}} "</$t>";
+            print { $s->{ _out } } "</$t>";
         }
     }
     elsif ( $e eq 'comment' )
     {
-        print
-            {$s->{_out}}
-                $text
-                    if $s->{_comment};
+        print { $s->{ _out } } $text
+          if $s->{ _comment };
     }
     elsif ( $e eq 'process' )
     {
-        print
-            {$s->{_out}}
-                $text
-                    if $s->{_process};
+        print { $s->{ _out } } $text
+          if $s->{ _process };
     }
-    elsif ( $e eq 'text' or $e eq 'default')
+    elsif ( $e eq 'text' or $e eq 'default' )
     {
-        $text =~ s/</&lt;/g; #https://rt.cpan.org/Ticket/Attachment/8716/10332/scrubber.patch
+        $text =~ s/</&lt;/g
+          ;    #https://rt.cpan.org/Ticket/Attachment/8716/10332/scrubber.patch
         $text =~ s/>/&gt;/g;
 
-        print
-            {$s->{_out}}
-                $text;
+        print { $s->{ _out } } $text;
     }
 }
 
@@ -474,108 +487,111 @@ I<default> handler, does the scrubbing if we're returning a giant string.
 
 =cut
 
-sub _scrub {
-    my( $p, $e, $t, $a, $as, $text ) = @_;
-    my $s = $p->{"\0_s"} ;
+sub _scrub
+{
+    my ( $p, $e, $t, $a, $as, $text ) = @_;
+    my $s = $p->{ "\0_s" };
 
     if ( $e eq 'start' )
     {
-        if( exists $s->{_rules}->{$t} )  # is there a specific rule
+        if ( exists $s->{ _rules }->{ $t } )    # is there a specific rule
         {
-            if( ref $s->{_rules}->{$t} ) # is it complicated?(not simple;)
+            if ( ref $s->{ _rules }->{ $t } )  # is it complicated?(not simple;)
             {
-                $s->{_r} .= $s->_validate($t, $t, $a, $as);
+                $s->{ _r } .= $s->_validate( $t, $t, $a, $as );
             }
-            elsif( $s->{_rules}->{$t} )  # validate using default attribute rule
+            elsif (
+                $s->{ _rules }->{ $t } ) # validate using default attribute rule
             {
-                $s->{_r} .= $s->_validate($t, '_', $a, $as);
+                $s->{ _r } .= $s->_validate( $t, '_', $a, $as );
             }
         }
-        elsif( $s->{_rules}->{'*'} )     # default allow tags
+        elsif ( $s->{ _rules }->{ '*' } )    # default allow tags
         {
-            $s->{_r} .= $s->_validate($t, '_', $a, $as);
+            $s->{ _r } .= $s->_validate( $t, '_', $a, $as );
         }
     }
     elsif ( $e eq 'end' )
     {
-        if( exists $s->{_rules}->{$t} )
+        if ( exists $s->{ _rules }->{ $t } )
         {
-            $s->{_r} .= "</$t>" if $s->{_rules}->{$t};
+            $s->{ _r } .= "</$t>" if $s->{ _rules }->{ $t };
         }
-        elsif( $s->{_rules}->{'*'} )
+        elsif ( $s->{ _rules }->{ '*' } )
         {
-            $s->{_r} .= "</$t>";
+            $s->{ _r } .= "</$t>";
         }
     }
     elsif ( $e eq 'comment' )
     {
-        $s->{_r} .= $text if $s->{_comment};
+        $s->{ _r } .= $text if $s->{ _comment };
     }
     elsif ( $e eq 'process' )
     {
-        $s->{_r} .= $text if $s->{_process};
+        $s->{ _r } .= $text if $s->{ _process };
     }
-    elsif ( $e eq 'text' or $e eq 'default')
+    elsif ( $e eq 'text' or $e eq 'default' )
     {
-        $text =~ s/</&lt;/g; #https://rt.cpan.org/Ticket/Attachment/8716/10332/scrubber.patch
+        $text =~ s/</&lt;/g
+          ;    #https://rt.cpan.org/Ticket/Attachment/8716/10332/scrubber.patch
         $text =~ s/>/&gt;/g;
 
-        $s->{_r} .= $text;
+        $s->{ _r } .= $text;
     }
     elsif ( $e eq 'start_document' )
     {
-        $s->{_r} = "";
+        $s->{ _r } = "";
     }
 }
 
-sub _optimize {
-    my($self) = @_;
+sub _optimize
+{
+    my ($self) = @_;
 
-    my( @ignore_elements ) = grep { not $self->{"_$_"} } qw(script style);
-    $self->{_p}->ignore_elements(@ignore_elements); # if @ is empty, we reset ;)
+    my (@ignore_elements) = grep {not $self->{ "_$_" }} qw(script style);
+    $self->{ _p }->ignore_elements(@ignore_elements)
+      ;    # if @ is empty, we reset ;)
 
-    return unless $self->{_optimize};
-#sub allow
-#    return unless $self->{_optimize}; # till I figure it out (huh)
+    return unless $self->{ _optimize };
 
-    if( $self->{_rules}{'*'} ){       # default allow
-        $self->{_p}->report_tags();   # so clear it
-    } else {
+    #sub allow
+    #    return unless $self->{_optimize}; # till I figure it out (huh)
 
-        my(@reports) =
-            grep {                # report only tags we want
-                $self->{_rules}{$_}
-            } keys %{
-                $self->{_rules}
-            };
+    if ( $self->{ _rules }{ '*' } )
+    {      # default allow
+        $self->{ _p }->report_tags();    # so clear it
+    }
+    else
+    {
 
-        $self->{_p}->report_tags( # default deny, so optimize
-            @reports
-        ) if @reports;
+        my (@reports) =
+          grep {                         # report only tags we want
+            $self->{ _rules }{ $_ }
+          } keys %{ $self->{ _rules } };
+
+        $self->{ _p }->report_tags(      # default deny, so optimize
+                                    @reports
+                                  ) if @reports;
     }
 
-# sub deny
-#    return unless $self->{_optimize}; # till I figure it out (huh)
-    my(@ignores)=
-        grep {
-            not $self->{_rules}{$_}
-        } grep {
-            $_ ne '*'
-        } keys %{
-            $self->{_rules}
-        };
+    # sub deny
+    #    return unless $self->{_optimize}; # till I figure it out (huh)
+    my (@ignores) =
+      grep {not $self->{ _rules }{ $_ }}
+      grep {$_ ne '*'} keys %{ $self->{ _rules } };
 
-    $self->{_p}->ignore_tags( # always ignore stuff we don't want
-        @ignores
-    ) if @ignores;
+    $self->{ _p }->ignore_tags(          # always ignore stuff we don't want
+                                @ignores
+                              ) if @ignores;
 
-    $self->{_optimize}=0;
+    $self->{ _optimize } = 0;
     return;
 }
 
 
-sub DESTROY {
-    delete $_[0]->{_p}->{"\0_s"}; # break circular reference
+sub DESTROY
+{
+    delete $_[0]->{ _p }->{ "\0_s" };    # break circular reference
 }
 
 

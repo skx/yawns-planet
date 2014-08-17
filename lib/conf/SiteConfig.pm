@@ -16,15 +16,15 @@ sub get_conf
 {
     my $requested = $_[0];
 
-    $dbuser = 'yawns';	# Database user to connect with.
-    $dbpass = 'yawns';  # Database password to connect with.
-    $dbname = 'yawns';	# Database name to connect to.
+    $dbuser = 'yawns';    # Database user to connect with.
+    $dbpass = 'yawns';    # Database password to connect with.
+    $dbname = 'yawns';    # Database name to connect to.
     $dbserv = '';
 
     #
     # Number of entries to generate. (HTML + feeds).
     #
-    $count	= 30;
+    $count = 30;
 
 
     #
@@ -62,12 +62,12 @@ sub get_conf
     #
     # Title of the HTML output page.
     #
-    $title  = 'Planet Debian Administration';
+    $title = 'Planet Debian Administration';
 
     #
     # Link to planet homepage
     #
-    $link   = 'http://planet.debian-administration.org/';
+    $link = 'http://planet.debian-administration.org/';
 
 
     #
@@ -83,13 +83,14 @@ sub get_conf
     #
     # Link shown in the header of the planet.
     #
-    $title_link = 'Planet <a href="http://www.debian-administration.org/">Debian Administration</a>';
+    $title_link =
+      'Planet <a href="http://www.debian-administration.org/">Debian Administration</a>';
 
 
     #
     # return the requested config variable
     #
-    return ( $$requested );
+    return ($$requested);
 }
 
 
