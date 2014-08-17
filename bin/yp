@@ -86,15 +86,16 @@ use YawnsBlog;
 #  Options.
 #
 my %CONFIG;
-$CONFIG{'verbose'} = 0;
-$CONFIG{'version'} = '$Id: yp,v 1.29 2007-02-06 18:15:26 steve Exp $';
+$CONFIG{ 'verbose' } = 0;
+$CONFIG{ 'version' } = '$Id: yp,v 1.29 2007-02-06 18:15:26 steve Exp $';
 
 
 #
 # Fix up the version
 #
-$CONFIG{'version'} = join (' ', (split (' ', $CONFIG{'version'}))[2..2]);
-$CONFIG{'version'} =~ s/yp,v\b//;
+$CONFIG{ 'version' } =
+  join( ' ', ( split( ' ', $CONFIG{ 'version' } ) )[2 .. 2] );
+$CONFIG{ 'version' } =~ s/yp,v\b//;
 
 
 #
@@ -106,36 +107,36 @@ parseCommandLineArguments();
 #
 # 0. Find the directory to load the tempaltes from.
 #
-my $TEMPLATES = get_conf( "template_dir" );
-testTemplateDirectory( $TEMPLATES );
+my $TEMPLATES = get_conf("template_dir");
+testTemplateDirectory($TEMPLATES);
 
 
 
 #  1. Get weblog entries.
 #
-$CONFIG{'verbose'} && print "Finding weblog entries\n";
-my @entries = YawnsBlog::Entries( get_conf( "count" ) );
-$CONFIG{'verbose'} && print "Done...\n";
+$CONFIG{ 'verbose' } && print "Finding weblog entries\n";
+my @entries = YawnsBlog::Entries( get_conf("count") );
+$CONFIG{ 'verbose' } && print "Done...\n";
 
 
 #
 #  2. Create output HTML
 #
-$CONFIG{'verbose'} && print "Creating HTML index\n";
-writeHTMLIndex( @entries );
-$CONFIG{'verbose'} && print "Done...\n";
+$CONFIG{ 'verbose' } && print "Creating HTML index\n";
+writeHTMLIndex(@entries);
+$CONFIG{ 'verbose' } && print "Done...\n";
 
 
 #
 #  3. Create output XML feeds.
 #
-$CONFIG{'verbose'} && print "Creating RSS 1.0 feed\n";
-writeRSS10( @entries );
-$CONFIG{'verbose'} && print "Done...\n";
+$CONFIG{ 'verbose' } && print "Creating RSS 1.0 feed\n";
+writeRSS10(@entries);
+$CONFIG{ 'verbose' } && print "Done...\n";
 
-$CONFIG{'verbose'} && print "Creating RSS 2.0 feed\n";
-writeRSS20( @entries );
-$CONFIG{'verbose'} && print "Done...\n";
+$CONFIG{ 'verbose' } && print "Creating RSS 2.0 feed\n";
+writeRSS20(@entries);
+$CONFIG{ 'verbose' } && print "Done...\n";
 
 
 #
@@ -156,11 +157,11 @@ exit;
 
 sub testTemplateDirectory
 {
-    my ( $directory ) = ( @_ );
+    my ($directory) = (@_);
 
-    if ( ! -d $TEMPLATES )
+    if ( !-d $TEMPLATES )
     {
-	print <<E_O_ERROR;
+        print <<E_O_ERROR;
 
 The templates directory you have chosen doesn't appear to exist:
 
@@ -172,17 +173,17 @@ Please update the following configuration file to correct this:
 
 Exiting.
 E_O_ERROR
-	exit;
+        exit;
     }
 
-    foreach my $file ( qw( index.tmpl rss10.tmpl rss20.tmpl ) )
+    foreach my $file (qw( index.tmpl rss10.tmpl rss20.tmpl ))
     {
-	if ( ! -e $directory . "/" . $file )
-	{
-	    print "Required template file '$file' not found in templates " .
-	          "directory '$directory'\n";
-	    exit;
-	}
+        if ( !-e $directory . "/" . $file )
+        {
+            print "Required template file '$file' not found in templates " .
+              "directory '$directory'\n";
+            exit;
+        }
     }
 }
 
@@ -198,40 +199,40 @@ E_O_ERROR
 
 sub writeHTMLIndex
 {
-    my ( @entries ) = ( @_ );
+    my (@entries) = (@_);
 
     #
     # Load the template.
     #
-    my $template = HTML::Template->new( filename =>  $TEMPLATES . "index.tmpl" ,
+    my $template = HTML::Template->new( filename => $TEMPLATES . "index.tmpl",
                                         loop_context_vars => 1 );
 
     #
     # Add the blogs and subscription information.
     #
-    $template->param( 'blogs', @entries );
+    $template->param( 'blogs',         @entries );
     $template->param( 'subscriptions', YawnsBlog::Posters() );
 
-    my $time = strftime ("%e %B %Y - %H:%M:%S", localtime);
+    my $time = strftime( "%e %B %Y - %H:%M:%S", localtime );
 
     #
     # Setup static parameters.
     #
-    $template->param( 'title',      get_conf( 'title' ) );
-    $template->param( 'title_link', get_conf( 'title_link' ) );
-    $template->param( 'updated' ,   $time );
-    $template->param( 'version' ,   $CONFIG{'version'} );
+    $template->param( 'title',      get_conf('title') );
+    $template->param( 'title_link', get_conf('title_link') );
+    $template->param( 'updated',    $time );
+    $template->param( 'version',    $CONFIG{ 'version' } );
 
 
     #
     # Open the output file, and write the data.
     #
-    my $output = get_conf( "htmlOutput" );
+    my $output = get_conf("htmlOutput");
 
-    open( OUTPUT, ">", $output )
-	or die "Cannot open output file '$output' - $!@";
+    open( OUTPUT, ">", $output ) or
+      die "Cannot open output file '$output' - $!@";
     print OUTPUT $template->output();
-    close( OUTPUT );
+    close(OUTPUT);
 }
 
 
@@ -251,7 +252,7 @@ sub writeHTMLIndex
 
 sub writeRSS10
 {
-    my ( $weblogs ) = ( @_ );
+    my ($weblogs) = (@_);
 
     my $contents;
     my $entries;
@@ -260,8 +261,8 @@ sub writeRSS10
     #
     #  get configuration values.
     #
-    my $site_link  = get_conf( 'link' );
-    my $site_title = get_conf( 'title' );
+    my $site_link  = get_conf('link');
+    my $site_title = get_conf('title');
 
 
     #
@@ -270,58 +271,56 @@ sub writeRSS10
     #
     # Username, ID, title, body, and date.
     #
-    foreach my $entry ( @$weblogs )
+    foreach my $entry (@$weblogs)
     {
-	my $title = $entry->{'title'};
-	my $user  = $entry->{'user'};
-	my $id    = $entry->{'id'};
-	my $body  = $entry->{'body'};
-	my $date  = $entry->{'date'};
-	my $time  = $entry->{'time'};
+        my $title = $entry->{ 'title' };
+        my $user  = $entry->{ 'user' };
+        my $id    = $entry->{ 'id' };
+        my $body  = $entry->{ 'body' };
+        my $date  = $entry->{ 'date' };
+        my $time  = $entry->{ 'time' };
 
 
-	#
-	#  Make sure the date is in the right format for
-	# the RSS v1.0 feed.
-	#
-	# e.g.
-	#      2005-10-11T14:39:00+00:00
-	#
-	my $dp  = ParseDate( $time . " " . $date );
-	$date = UnixDate( $dp, "%Y-%m-%dT%H:%M:00+00:00");
+        #
+        #  Make sure the date is in the right format for
+        # the RSS v1.0 feed.
+        #
+        # e.g.
+        #      2005-10-11T14:39:00+00:00
+        #
+        my $dp = ParseDate( $time . " " . $date );
+        $date = UnixDate( $dp, "%Y-%m-%dT%H:%M:00+00:00" );
 
-	#
-	#  HTML Encode the title, and body, so that it is valid XML
-	#
-	$title = encode_entities( $title );
-	$body  = encode_entities( $body );
+        #
+        #  HTML Encode the title, and body, so that it is valid XML
+        #
+        $title = encode_entities($title);
+        $body  = encode_entities($body);
 
-	push( @$contents,
-	      {
-		  username => $user,
-		  id       => $id,
-	      } );
+        push( @$contents,
+              {  username => $user,
+                 id       => $id,
+              } );
 
-	push( @$entries,
-	      {
-		  username => $user,
-		  id       => $id,
-		  title    => $title,
-		  bodytext => $body,
-		  date     => $date
-		  } );
+        push( @$entries,
+              {  username => $user,
+                 id       => $id,
+                 title    => $title,
+                 bodytext => $body,
+                 date     => $date
+              } );
 
     }
 
     #
     # Load the template.
     #
-    my $template = HTML::Template->new( filename =>  $TEMPLATES . "rss10.tmpl" );
+    my $template = HTML::Template->new( filename => $TEMPLATES . "rss10.tmpl" );
 
     #
     #  Set the parameters
     #
-    $template->param( "contents", $contents );
+    $template->param( "contents",    $contents );
     $template->param( "blogentries", $entries );
     $template->param( site_link  => $site_link,
                       site_title => $site_title );
@@ -329,11 +328,11 @@ sub writeRSS10
     #
     # Open the output file, and write the data.
     #
-    my $output = get_conf( "rss1Output" );
-    open( RSS10OUTPUT, ">", $output )
-	or die "Cannot open output file '$output' - $!@";
+    my $output = get_conf("rss1Output");
+    open( RSS10OUTPUT, ">", $output ) or
+      die "Cannot open output file '$output' - $!@";
     print RSS10OUTPUT $template->output();
-    close( RSS10OUTPUT );
+    close(RSS10OUTPUT);
 }
 
 
@@ -353,13 +352,13 @@ sub writeRSS10
 
 sub writeRSS20
 {
-    my ( $weblogs ) = ( @_ );
+    my ($weblogs) = (@_);
 
     #
     #  get configuration values.
     #
-    my $site_link  = get_conf( 'link' );
-    my $site_title = get_conf( 'title' );
+    my $site_link  = get_conf('link');
+    my $site_title = get_conf('title');
 
     my $entries;
 
@@ -369,39 +368,38 @@ sub writeRSS20
     #
     # Username, ID, title, body, and date.
     #
-    foreach my $entry ( @$weblogs )
+    foreach my $entry (@$weblogs)
     {
-	my $title = $entry->{'title'};
-	my $user  = $entry->{'user'};
-	my $id    = $entry->{'id'};
-	my $body  = $entry->{'body'};
-	my $date  = $entry->{'date'};
-	my $time  = $entry->{'time'};
+        my $title = $entry->{ 'title' };
+        my $user  = $entry->{ 'user' };
+        my $id    = $entry->{ 'id' };
+        my $body  = $entry->{ 'body' };
+        my $date  = $entry->{ 'date' };
+        my $time  = $entry->{ 'time' };
 
 
-	#
-	#  Make sure the date is in the right format for
-	# the RSS v2.0 feed.
-	#
-	# e.g.
-	#      Sat, 10 Sep 2005 02:44:00 +0000
-	#
-	my $dp  = ParseDate( $time . " " . $date );
-	$date = UnixDate( $dp, "%a, %d %b %Y %H:%M:%S +0000" );
+        #
+        #  Make sure the date is in the right format for
+        # the RSS v2.0 feed.
+        #
+        # e.g.
+        #      Sat, 10 Sep 2005 02:44:00 +0000
+        #
+        my $dp = ParseDate( $time . " " . $date );
+        $date = UnixDate( $dp, "%a, %d %b %Y %H:%M:%S +0000" );
 
-	#
-	#  HTML Encode the title, and body, so that it is valid XML
-	#
-	$title = encode_entities( $title );
-	$body  = encode_entities( $body );
+        #
+        #  HTML Encode the title, and body, so that it is valid XML
+        #
+        $title = encode_entities($title);
+        $body  = encode_entities($body);
 
-	push( @$entries,
-	      {
-		  username => $user,
-		  id       => $id,
-		  title    => $title,
-		  bodytext => $body,
-		  date     => $date
+        push( @$entries,
+              {  username => $user,
+                 id       => $id,
+                 title    => $title,
+                 bodytext => $body,
+                 date     => $date
               } );
 
     }
@@ -418,14 +416,15 @@ sub writeRSS20
     $template->param( "entries", $entries );
     $template->param( site_link  => $site_link,
                       site_title => $site_title );
+
     #
     # Open the output file, and write the data.
     #
-    my $output = get_conf( "rss2Output" );
-    open( OUTPUT, ">", $output )
-	or die "Cannot open output file '$output' - $!@";
+    my $output = get_conf("rss2Output");
+    open( OUTPUT, ">", $output ) or
+      die "Cannot open output file '$output' - $!@";
     print OUTPUT $template->output();
-    close( OUTPUT );
+    close(OUTPUT);
 }
 
 
@@ -448,18 +447,17 @@ sub parseCommandLineArguments
     #
     #  Parse the options we accept
     #
-    GetOptions(
-               "file=s",     \$CONFIG{'file'},
-               "help",       \$SHOW_HELP,
-               "manual",     \$SHOW_MANUAL,
-               "verbose",    \$CONFIG{'verbose'},
-               "version",    \$SHOW_VERSION,
-             );
+    GetOptions( "file=s",  \$CONFIG{ 'file' },
+                "help",    \$SHOW_HELP,
+                "manual",  \$SHOW_MANUAL,
+                "verbose", \$CONFIG{ 'verbose' },
+                "version", \$SHOW_VERSION,
+              );
 
-    pod2usage(1)              if ( $SHOW_HELP   );
-    pod2usage(-verbose => 2 ) if ( $SHOW_MANUAL );
+    pod2usage(1) if ($SHOW_HELP);
+    pod2usage( -verbose => 2 ) if ($SHOW_MANUAL);
 
-    if ( $SHOW_VERSION )
+    if ($SHOW_VERSION)
     {
         print "$0 Revision: $CONFIG{'version'}\n";
         exit;
