@@ -1,118 +1,66 @@
 Yawns-Planet
 ------------
 
-  This software is designed to output a "PlanetPlanet" like collection
- of webpages.
+This software is designed to output a "PlanetPlanet" like collection
+of webpages.
 
 
 Rationale
 ---------
 
-  Using PlanetPlanet entries are fetched by making HTTP requests to
- remote servers.  In the case of Yawns it is much more efficient to
- directly query the database, and avoid the HTTP request and 
- feed processing.
+Using PlanetPlanet entries are fetched by making HTTP requests to
+remote servers.  In the case of Yawns it is much more efficient to
+directly query the database, and avoid the HTTP request and 
+feed processing.
 
-  This approach also has at least the following advantage(s):
+This approach also has at least the following advantage(s):
 
-	* It allows the display to contain more information than
-          is permitted upon a PlanetPlanet installation.
+* It allows the display to contain more information than is permitted upon a PlanetPlanet installation.
 
-        * It avoids invoking Yawns to generate each XML feed for the
-          subscribed users.
+* It avoids invoking Yawns to generate each XML feed for the subscribed users.
 
-        * It will work if your Yawns installation doesn't have weblog
-          feeds available.
+* It will work if your Yawns installation doesn't have weblog feeds available.
 
-  Since we're working directly with the database contents we also have
- a natural ability to search for previous entries.  The file
- cgi-bin/index.cgi allows visitors to perform searches.
+Since we're working directly with the database contents we also have
+a natural ability to search for previous entries.  The file
+cgi-bin/index.cgi allows visitors to perform searches.
 
 
 
 Requirements
 ------------
 
-  Using this software makes no sense if you're not running an
- installation of Yawns.
+Using this software makes no sense if you're not running an
+installation of Yawns.
 
-  If you have Yawns installed already the only additional software
- you need is the perl module:
+If you have Yawns installed already the only additional software
+you need is the perl module:
 
-	Date::Manip
-  
-  This can be installed upon a Debian host with the following command:
+ * Date::Manip
 
-	apt-get install libdate-manip-perl
+This can be installed upon a Debian host with the following command:
+
+     apt-get install libdate-manip-perl
 
 
 Installation
 ------------
 
-  Checkout from CVS:
+Once you have a copy of the software downloaded you will need to
+configure it by editting the file "conf/SiteConfig.pm". The settings
+there should be obvious.
 
-    cvs -d:pserver:anonymous@cvsrepository.org:/home/cvs login
-    cvs -d:pserver:anonymous@cvsrepository.org:/home/cvs co yawns-planet
-
-  Once you have a copy of the software downloaded you will need to
- configure it by editting the file "conf/SiteConfig.pm". The settings
- there should be obvious.
-
-  After you have updated any settings you care about you may generate
- the output pages by running:
+After you have updated any settings you care about you may generate
+the output pages by running:
 
 	./yp
+
   or
 
 	make planet
 
-  If you wish you may customize the template files before updating
- them.  (They are standard HTML::Template files.)
+If you wish you may customize the template files before updating
+them.  (They are standard `HTML::Template` files.)
 
 
 
-Search Setup
-------------
-
-  If you wish to allow users to search previous entries for keywords
- then you must ensure that you have an Apache setup which allows execution
- of CGI scripts.
-
-  Installation will look something like this:
-
-	mkdir -p /home/www/planet.foo.com/
-	cd /home/www/planet.foo.com/
-	cvs -d:pserver:anonymous@cvsrepository.org:/home/cvs login
-	cvs -d:pserver:anonymous@cvsrepository.org:/home/cvs co yawns-planet
-	ln -s yawns-planet/html    html
-	ln -s yawns-planet/cgi-bin cgi-bin
-	
-
-  The corresponding Apache setup will look something like this:
-
-	<VirtualHost>
-	   ServerName planet.foo.com
-	   DocumentRoot /home/www/planet.foo.com/htdocs
-	   ScriptAlias /cgi-bin/ /home/www/planet.foo.com/cgi-bin
-           <Location /cgi-bin>
-                Options +ExecCGI
-           </Location>
-	</VirtualHost>
-
-
-Testing
--------
-
-  There are some minimal code tests included within the tests/
- subdirectory.
-
-  To execute them run:
-
-	make test
-
-  Any failures are bugs, and should be reported.
-
-
-Steve
---
-$Id: README,v 1.7 2007-02-06 17:08:13 steve Exp $
