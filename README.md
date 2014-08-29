@@ -1,17 +1,13 @@
 Yawns-Planet
 ------------
 
-This software is designed to output a "PlanetPlanet" like collection
-of webpages.
+This software is designed to output a "PlanetPlanet" like collection of webpages.
 
 
 Rationale
 ---------
 
-Using PlanetPlanet entries are fetched by making HTTP requests to
-remote servers.  In the case of Yawns it is much more efficient to
-directly query the database, and avoid the HTTP request and 
-feed processing.
+Using PlanetPlanet entries are fetched by making HTTP requests to remote servers.  In the case of Yawns it is much more efficient to directly query the database, and avoid the HTTP request and feed processing.
 
 This approach also has at least the following advantage(s):
 
@@ -21,46 +17,37 @@ This approach also has at least the following advantage(s):
 
 * It will work if your Yawns installation doesn't have weblog feeds available.
 
-Since we're working directly with the database contents we also have
-a natural ability to search for previous entries.  The file
-cgi-bin/index.cgi allows visitors to perform searches.
 
 
 
 Requirements
 ------------
 
-Using this software makes no sense if you're not running an
-installation of Yawns.
+Using this software makes no sense if you're not running an installation of Yawns.
 
-If you have Yawns installed already the only additional software
-you need is the perl module:
-
- * Date::Manip
+If you have Yawns installed already the only additional software you need is the perl module `Date::Manip`.
 
 This can be installed upon a Debian host with the following command:
 
-     apt-get install libdate-manip-perl
+     # apt-get install libdate-manip-perl
 
 
 Installation
 ------------
 
-Once you have a copy of the software downloaded you will need to
-configure it by editting the file "conf/SiteConfig.pm". The settings
-there should be obvious.
+Once you have a copy of the software downloaded you will need to configure it by editting the file "conf/SiteConfig.pm". The settings there should be obvious.
 
-After you have updated any settings you care about you may generate
-the output pages by running:
+After you have updated any settings you care about you may generate the output pages by running:
 
 	./yp
 
-  or
+or
 
 	make planet
 
-If you wish you may customize the template files before updating
-them.  (They are standard `HTML::Template` files.)
+If you wish you may customize the template files before updating them.  (They are standard `HTML::Template` files.)
 
 
 
+Steve
+-- 
